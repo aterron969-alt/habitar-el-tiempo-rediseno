@@ -1,0 +1,45 @@
+---
+// Campo de formulario con etiqueta visible y mensaje de error accesible.
+// La validación (al salir del campo y al enviar) está en src/scripts/formularios.ts.
+interface Props {
+  id: string;
+  nombre: string;
+  etiqueta?: string;
+  tipo?: 'text' | 'email' | 'tel' | 'textarea' | 'checkbox';
+  requerido?: boolean;
+  autocomplete?: string;
+  /** Mensaje si el campo está vacío. */
+  vacio?: string;
+  filas?: number;
+  placeholder?: string;
+}
+const { id, nombre, etiqueta, tipo = 'text', requerido = false, autocomplete, vacio, filas = 4, placeholder } = Astro.props;
+const err = `${id}-error`;
+---
+{tipo === 'checkbox' ? (
+  <div class="campo campo--check" data-campo>
+    <input type="checkbox" id={id} name={nombre} required={requerido} aria-describedby={err} data-vacio={vacio} />
+    <label for={id}><slot /></label>
+    <p class="campo-error" id={err} aria-live="polite"></p>
+  </div>
+) : (
+  <div class="campo" data-campo>
+    <label for={id}>{etiqueta}{!requerido && <span class="campo-opcional"> (opcional)</span>}</label>
+    {tipo === 'textarea' ? (
+      <textarea id={id} name={nombre} rows={filas} placeholder={placeholder} required={requerido} aria-describedby={err} data-vacio={vacio}></textarea>
+    ) : (
+      <input
+        type={tipo}
+        id={id}
+        name={nombre}
+        required={requerido}
+        autocomplete={autocomplete}
+        placeholder={placeholder}
+        inputmode={tipo === 'tel' ? 'tel' : tipo === 'email' ? 'email' : undefined}
+        aria-describedby={err}
+        data-vacio={vacio}
+      />
+    )}
+    <p class="campo-error" id={err} aria-live="polite"></p>
+  </div>
+)}

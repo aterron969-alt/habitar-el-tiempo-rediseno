@@ -1,0 +1,56 @@
+/* Formularios: etiquetas visibles, errores claros, foco evidente */
+.formulario { display: grid; gap: var(--s-4); }
+.formulario-fila { display: grid; gap: var(--s-4); }
+@media (min-width: 640px) { .formulario-fila--2 { grid-template-columns: 1fr 1fr; } }
+
+.campo { display: grid; gap: var(--s-1); }
+.campo label { font-weight: 700; font-size: var(--fs-sm); color: var(--tinta); }
+.campo-opcional { font-weight: 400; color: var(--gris-texto); }
+.campo input:not([type='checkbox']),
+.campo textarea {
+  width: 100%;
+  min-height: 50px;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid #c9c9d1;
+  border-radius: var(--r-md);
+  background: var(--blanco);
+  font-size: var(--fs-base);
+  transition: border-color var(--t-rapida) var(--ease-suave), box-shadow var(--t-rapida) var(--ease-suave);
+}
+.campo textarea { resize: vertical; min-height: 120px; }
+.campo input:hover, .campo textarea:hover { border-color: #9d9da6; }
+.campo input:focus-visible, .campo textarea:focus-visible {
+  outline: none;
+  border-color: var(--turquesa-texto);
+  box-shadow: 0 0 0 4px rgb(0 124 134 / 0.18);
+}
+.campo[data-estado='error'] input:not([type='checkbox']),
+.campo[data-estado='error'] textarea { border-color: var(--error); }
+.campo[data-estado='error'] input:focus-visible,
+.campo[data-estado='error'] textarea:focus-visible { box-shadow: 0 0 0 4px rgb(179 38 30 / 0.15); }
+.campo-error { color: var(--error); font-size: var(--fs-sm); font-weight: 600; min-height: 0; }
+.campo-error:empty { display: none; }
+
+.campo--check {
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  column-gap: var(--s-3);
+}
+.campo--check input {
+  width: 22px; height: 22px; margin-top: 2px;
+  accent-color: var(--turquesa-texto);
+}
+.campo--check label { font-weight: 400; font-size: var(--fs-sm); line-height: 1.5; }
+.campo--check .campo-error { grid-column: 2; }
+
+.formulario-aviso {
+  display: flex; gap: var(--s-3); align-items: flex-start;
+  padding: var(--s-4);
+  border-radius: var(--r-md);
+  background: var(--turquesa-velo);
+  color: var(--tinta);
+  font-weight: 600;
+  font-size: var(--fs-sm);
+}
+.formulario-aviso[hidden] { display: none; }
+.formulario-aviso svg { flex: none; color: var(--turquesa-texto); margin-top: 2px; }

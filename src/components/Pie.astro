@@ -1,0 +1,83 @@
+---
+import Logo from './Logo.astro';
+import { ESCUELA, legales, menu } from '../data/sitio';
+import { url } from '../lib/url';
+
+const enlace = (href: string, externo?: boolean) => (externo ? href : href.startsWith('#') ? url(href) : url(href));
+---
+<footer class="pie">
+  <div class="container pie-rejilla">
+    <div class="pie-marca">
+      <Logo tam={72} />
+      <p class="pie-nombre">{ESCUELA}</p>
+    </div>
+
+    <nav aria-label="Secundaria" class="pie-nav">
+      <ul role="list">
+        {menu.map((i) => <li><a href={enlace(i.href, i.externo)}>{i.texto}</a></li>)}
+      </ul>
+    </nav>
+
+    <div class="pie-legal">
+      <ul role="list" class="pie-legales">
+        {legales.map((i) => <li><a href={i.href} rel="noopener">{i.texto}</a></li>)}
+      </ul>
+      <p>© 2012–2026 {ESCUELA}</p>
+    </div>
+  </div>
+  <p class="pie-aviso">
+    Propuesta de rediseño realizada por CLICKA2 · <a href="https://clicka2.es" rel="noopener">clicka2.es</a>
+  </p>
+</footer>
+
+<style>
+  .pie {
+    background: var(--niebla);
+    border-top: 1px solid var(--linea);
+    padding-top: var(--s-8);
+    font-size: var(--fs-sm);
+    color: var(--gris-texto);
+  }
+  .pie-rejilla {
+    display: grid;
+    gap: var(--s-6);
+    justify-items: center;
+    text-align: center;
+  }
+  .pie-marca { display: grid; justify-items: center; gap: var(--s-3); }
+  .pie-nombre { font-weight: 700; color: var(--tinta); font-size: var(--fs-base); }
+  .pie-nav ul, .pie-legales {
+    display: flex; flex-wrap: wrap; justify-content: center;
+    gap: var(--s-1) var(--s-4);
+  }
+  .pie a {
+    color: var(--tinta);
+    text-decoration: none;
+    display: inline-block;
+    padding-block: var(--s-2);
+  }
+  .pie a:hover { color: var(--turquesa-texto); text-decoration: underline; }
+  .pie-nav a { font-weight: 600; }
+  .pie-legal { display: grid; gap: var(--s-1); }
+  .pie-aviso {
+    margin-top: var(--s-7);
+    padding: var(--s-4) var(--gutter);
+    border-top: 1px solid var(--linea);
+    text-align: center;
+    font-size: var(--fs-xs);
+  }
+  .pie-aviso a { color: var(--gris-texto); text-decoration: underline; padding: 0; }
+
+  @media (min-width: 900px) {
+    .pie-rejilla {
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      justify-items: stretch;
+      text-align: left;
+    }
+    .pie-marca { grid-template-columns: auto auto; align-items: center; justify-items: start; }
+    .pie-nombre { max-width: 16ch; }
+    .pie-legal { justify-items: end; text-align: right; }
+    .pie-legales { justify-content: flex-end; }
+  }
+</style>

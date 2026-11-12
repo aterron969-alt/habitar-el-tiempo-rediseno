@@ -1,0 +1,70 @@
+---
+// Ventana «Solicita tus sesiones» (en el original era un popup de Elementor).
+// Se abre con cualquier elemento [data-abrir-sesiones].
+import Campo from './Campo.astro';
+import AvisoDemo from './AvisoDemo.astro';
+import { Image } from 'astro:assets';
+import budyTeleoperador from '../assets/orig/budy-teleoperador.webp';
+import { externos } from '../data/sitio';
+import '../styles/formularios.css';
+---
+<dialog class="dialogo" aria-labelledby="dialogo-sesiones-titulo" data-dialogo-sesiones>
+  <div class="dialogo-caja">
+    <button type="button" class="dialogo-cerrar" data-cerrar-dialogo aria-label="Cerrar">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+    </button>
+    <div class="dialogo-cabeza">
+      <Image src={budyTeleoperador} alt="" width={72} densities={[1, 2]} class="dialogo-budy" />
+      <h2 id="dialogo-sesiones-titulo">Solicita tus sesiones</h2>
+    </div>
+    <!-- PENDIENTE: conectar con Formspree o con el backend real de la escuela
+         (action="https://formspree.io/f/XXXX" method="POST" y quitar data-demo). -->
+    <form class="formulario" novalidate data-demo>
+      <Campo id="ses-nombre" nombre="nombre" etiqueta="Nombre" requerido autocomplete="name" vacio="Escribe tu nombre." />
+      <Campo id="ses-email" nombre="email" etiqueta="Correo electrónico" tipo="email" requerido autocomplete="email" vacio="Escribe tu correo electrónico." />
+      <Campo id="ses-tel" nombre="telefono" etiqueta="Teléfono" tipo="tel" requerido autocomplete="tel" placeholder="Nº de móvil" vacio="Escribe tu número de móvil." />
+      <Campo id="ses-horario" nombre="preferencias" etiqueta="Días y horas para contactarte" requerido placeholder="Indica aquí tus preferencias" vacio="Indica qué días y horas te vienen bien." />
+      <Campo id="ses-acepto" nombre="acepto" tipo="checkbox" requerido vacio="Necesitamos que aceptes el acuerdo de servicio y la privacidad.">
+        Acepto el <a href={externos.acuerdoServicio} rel="noopener" target="_blank">acuerdo de servicio</a> y la <a href={externos.privacidad} rel="noopener" target="_blank">privacidad</a>
+      </Campo>
+      <button type="submit" class="btn btn--primario btn--grande">Solicitar ›</button>
+      <AvisoDemo />
+    </form>
+  </div>
+</dialog>
+
+<style>
+  .dialogo {
+    width: min(560px, calc(100vw - 24px));
+    max-height: calc(100dvh - 24px);
+    margin: auto;
+    padding: 0;
+    border: 0;
+    border-radius: var(--r-lg);
+    background: var(--blanco);
+    color: var(--tinta);
+    box-shadow: 0 30px 80px rgb(29 29 31 / 0.25);
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+  .dialogo::backdrop { background: rgb(29 29 31 / 0.45); }
+  .dialogo[open] { animation: dialogo-entra var(--t-media) var(--ease-suave); }
+  .dialogo[open]::backdrop { animation: velo-entra var(--t-media) var(--ease-suave); }
+  @keyframes dialogo-entra { from { opacity: 0; transform: translateY(16px) scale(0.98); } }
+  @keyframes velo-entra { from { opacity: 0; } }
+  .dialogo-caja { position: relative; padding: var(--s-6) var(--s-5) var(--s-5); }
+  @media (min-width: 640px) { .dialogo-caja { padding: var(--s-7) var(--s-7) var(--s-6); } }
+  .dialogo-cabeza { display: flex; align-items: center; gap: var(--s-4); margin-bottom: var(--s-5); }
+  .dialogo-cabeza h2 { font-size: var(--fs-lg); }
+  :global(.dialogo-budy) { width: 64px; height: 64px; border-radius: 50%; flex: none; }
+  .dialogo-cerrar {
+    position: absolute; top: 12px; right: 12px;
+    display: grid; place-items: center;
+    width: 44px; height: 44px;
+    border: 0; border-radius: 50%;
+    background: var(--niebla);
+    transition: background-color var(--t-rapida) var(--ease-suave);
+  }
+  .dialogo-cerrar:hover { background: var(--linea); }
+  .formulario .btn { justify-self: start; }
+</style>

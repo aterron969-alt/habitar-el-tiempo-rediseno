@@ -1,0 +1,235 @@
+---
+import Logo from './Logo.astro';
+import { menu } from '../data/sitio';
+import { url } from '../lib/url';
+
+interface Props { portada?: boolean }
+const { portada = false } = Astro.props;
+
+// Las anclas (#sesiones, #acerca) apuntan a la portada desde cualquier página.
+const enlace = (href: string, externo?: boolean) =>
+  externo ? href : href.startsWith('#') ? (portada ? href : url(href)) : url(href);
+const actual = Astro.url.pathname;
+const esActual = (href: string) => !href.startsWith('#') && !href.startsWith('http') && actual === url(href);
+---
+<header class="cabecera" data-cabecera>
+  <div class="container cabecera-fila">
+    <a class="marca" href={url()} aria-label="Habitar el Tiempo, ir al inicio">
+      <Logo tam={52} animar clase="marca-logo" />
+      <span class="marca-texto" aria-hidden="true">
+        <span class="marca-pre">Escuela de Mindfulness</span>
+        <span class="marca-nombre">Habitar el Tiempo</span>
+      </span>
+    </a>
+
+    <nav class="nav" aria-label="Principal">
+      <ul role="list" class="nav-lista">
+        {menu.map((i) => (
+          <li>
+            <a
+              href={enlace(i.href, i.externo)}
+              aria-current={esActual(i.href) ? 'page' : undefined}
+              {...(i.externo ? { rel: 'noopener' } : {})}
+            >{i.texto}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="cabecera-acciones">
+      <a href={url('consultame/#solicita')} class="btn btn--primario btn--peq" data-abrir-sesiones>Empieza ahora</a>
+      <button type="button" class="menu-boton" aria-expanded="false" aria-controls="menu-movil" data-menu-boton>
+        <span class="sr-only" data-menu-etiqueta>Abrir menú</span>
+        <span class="menu-icono" aria-hidden="true"><span></span><span></span></span>
+      </button>
+    </div>
+  </div>
+
+  <div class="menu-movil" id="menu-movil" data-menu hidden>
+    <nav aria-label="Principal (móvil)">
+      <ul role="list">
+        {menu.map((i, n) => (
+          <li style={`--n:${n}`}>
+            <a href={enlace(i.href, i.externo)} aria-current={esActual(i.href) ? 'page' : undefined}>{i.texto}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+    <a href={url('consultame/#solicita')} class="btn btn--primario btn--grande" data-abrir-sesiones style={`--n:${menu.length}`}>Empieza ahora</a>
+  </div>
+</header>
+
+<style>
+  .cabecera {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--t-media) var(--ease-suave), box-shadow var(--t-media) var(--ease-suave);
+  }
+  /* El desenfoque va en un pseudo-elemento: backdrop-filter en .cabecera
+     convertiría el menú móvil (position: fixed) en relativo a la cabecera. */
+  .cabecera::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: rgb(255 255 255 / 0.9);
+    -webkit-backdrop-filter: saturate(1.6) blur(14px);
+    backdrop-filter: saturate(1.6) blur(14px);
+  }
+  .cabecera.es-compacta { border-bottom-color: var(--linea); box-shadow: 0 6px 24px rgb(29 29 31 / 0.04); }
+  .cabecera-fila {
+    display: flex;
+    align-items: center;
+    gap: var(--s-5);
+    height: var(--cabecera);
+    transition: height var(--t-media) var(--ease-suave);
+  }
+  .cabecera.es-compacta .cabecera-fila { height: 62px; }
+
+  .marca {
+    display: flex; align-items: center; gap: var(--s-3);
+    color: var(--tinta); text-decoration: none;
+    margin-right: auto;
+    border-radius: var(--r-sm);
+  }
+  .marca :global(.marca-logo) { transition: width var(--t-media) var(--ease-suave); }
+  .cabecera.es-compacta .marca :global(.marca-logo) { width: 42px; }
+  .marca-texto { display: grid; line-height: 1.15; }
+  .marca-pre { font-size: var(--fs-xs); font-weight: 600; color: var(--gris-texto); }
+  .marca-nombre { font-size: 1.0625rem; font-weight: 800; letter-spacing: -0.01em; }
+
+  .nav { display: none; }
+  .nav-lista { display: flex; gap: var(--s-1); }
+  .nav-lista a {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--r-pill);
+    color: var(--tinta);
+    font-weight: 600;
+    font-size: var(--fs-sm);
+    text-decoration: none;
+    transition: background-color var(--t-media) var(--ease-suave), color var(--t-media) var(--ease-suave);
+  }
+  .nav-lista a:hover { background: var(--niebla); }
+  .nav-lista a[aria-current='page'] { color: var(--turquesa-texto); background: var(--turquesa-velo); }
+
+  .cabecera-acciones { display: flex; align-items: center; gap: var(--s-3); }
+
+  .menu-boton {
+    display: grid; place-items: center;
+    width: 48px; height: 48px;
+    border: 0; border-radius: 50%;
+    background: var(--niebla);
+    position: relative; z-index: 2;
+    transition: background-color var(--t-media) var(--ease-suave);
+  }
+  .menu-boton:hover { background: var(--linea); }
+  .menu-icono { display: grid; gap: 6px; width: 20px; }
+  .menu-icono span {
+    display: block; height: 2px; border-radius: 2px; background: var(--tinta);
+    transition: transform var(--t-media) var(--ease-suave);
+  }
+  .menu-boton[aria-expanded='true'] .menu-icono span:first-child { transform: translateY(4px) rotate(45deg); }
+  .menu-boton[aria-expanded='true'] .menu-icono span:last-child { transform: translateY(-4px) rotate(-45deg); }
+
+  /* Menú móvil a pantalla completa */
+  .menu-movil {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    background: var(--blanco);
+    padding: calc(var(--cabecera) + var(--s-6)) var(--gutter) var(--s-7);
+    display: flex; flex-direction: column; gap: var(--s-6);
+    overflow-y: auto;
+    opacity: 0;
+    transition: opacity var(--t-media) var(--ease-suave);
+  }
+  .menu-movil[hidden] { display: none; }
+  .menu-movil.esta-abierto { opacity: 1; }
+  .menu-movil ul { display: grid; gap: var(--s-1); }
+  .menu-movil a {
+    display: block;
+    padding: var(--s-3) 0;
+    font-size: clamp(1.5rem, 1.2rem + 1.6vw, 2rem);
+    font-weight: 700;
+    color: var(--tinta);
+    text-decoration: none;
+    border-bottom: 1px solid var(--linea);
+  }
+  .menu-movil a[aria-current='page'] { color: var(--turquesa-texto); }
+  .menu-movil li, .menu-movil > .btn {
+    opacity: 0; transform: translateY(12px);
+    transition: opacity var(--t-media) var(--ease-suave), transform var(--t-media) var(--ease-suave);
+    transition-delay: calc(var(--n) * 45ms + 80ms);
+  }
+  .menu-movil.esta-abierto li, .menu-movil.esta-abierto > .btn { opacity: 1; transform: none; }
+  .menu-movil > .btn { align-self: flex-start; }
+
+  /* La cabecera queda por encima del menú abierto (logo y botón cerrar) */
+  .cabecera-fila { position: relative; z-index: 2; }
+
+  @media (max-width: 479px) {
+    .marca-texto { display: none; }
+    .cabecera-acciones .btn { padding-inline: 1rem; }
+  }
+  @media (min-width: 1180px) {
+    .nav { display: block; }
+    .menu-boton, .menu-movil { display: none !important; }
+  }
+</style>
+
+<script>
+  const cab = document.querySelector<HTMLElement>('[data-cabecera]')!;
+  const boton = cab.querySelector<HTMLButtonElement>('[data-menu-boton]')!;
+  const etiqueta = cab.querySelector<HTMLElement>('[data-menu-etiqueta]')!;
+  const panel = cab.querySelector<HTMLElement>('[data-menu]')!;
+
+  // Cabecera compacta al hacer scroll
+  const sensor = document.createElement('div');
+  sensor.style.cssText = 'position:absolute;top:0;left:0;width:1px;height:40px;pointer-events:none';
+  document.body.prepend(sensor);
+  new IntersectionObserver(([e]) => cab.classList.toggle('es-compacta', !e.isIntersecting)).observe(sensor);
+
+  // Menú móvil
+  let abierto = false;
+  const enfocables = () => [boton, ...panel.querySelectorAll<HTMLElement>('a, button')];
+  function abrir() {
+    abierto = true;
+    panel.hidden = false;
+    requestAnimationFrame(() => requestAnimationFrame(() => panel.classList.add('esta-abierto')));
+    boton.setAttribute('aria-expanded', 'true');
+    etiqueta.textContent = 'Cerrar menú';
+    document.documentElement.classList.add('sin-scroll');
+    window.dispatchEvent(new CustomEvent('ht:scroll', { detail: false }));
+    panel.querySelector<HTMLElement>('a')?.focus();
+  }
+  function cerrar(devolverFoco = true) {
+    if (!abierto) return;
+    abierto = false;
+    panel.classList.remove('esta-abierto');
+    boton.setAttribute('aria-expanded', 'false');
+    etiqueta.textContent = 'Abrir menú';
+    document.documentElement.classList.remove('sin-scroll');
+    window.dispatchEvent(new CustomEvent('ht:scroll', { detail: true }));
+    const fin = () => { if (!abierto) panel.hidden = true; };
+    matchMedia('(prefers-reduced-motion: reduce)').matches ? fin() : setTimeout(fin, 450);
+    if (devolverFoco) boton.focus();
+  }
+  boton.addEventListener('click', () => (abierto ? cerrar() : abrir()));
+  panel.addEventListener('click', (e) => {
+    if ((e.target as HTMLElement).closest('a, button')) cerrar(false);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (!abierto) return;
+    if (e.key === 'Escape') cerrar();
+    if (e.key === 'Tab') {
+      const lista = enfocables();
+      const i = lista.indexOf(document.activeElement as HTMLElement);
+      if (e.shiftKey && i <= 0) { e.preventDefault(); lista[lista.length - 1].focus(); }
+      else if (!e.shiftKey && i === lista.length - 1) { e.preventDefault(); lista[0].focus(); }
+    }
+  });
+  matchMedia('(min-width: 1180px)').addEventListener('change', (m) => m.matches && cerrar(false));
+</script>

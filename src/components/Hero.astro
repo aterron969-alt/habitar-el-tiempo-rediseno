@@ -1,0 +1,329 @@
+---
+import { Image } from 'astro:assets';
+import budyCalma from '../assets/budy/budy-calma.png';
+import { beneficios } from '../data/sitio';
+import { url } from '../lib/url';
+
+// Forma inicial del círculo (sin JS se queda así): círculo perfecto en viewBox 400×400.
+const R = 168;
+const circulo = `M${200 + R},200 A${R},${R} 0 1,1 ${200 - R},200 A${R},${R} 0 1,1 ${200 + R},200 Z`;
+const frase = beneficios.map((b) => b.toLocaleLowerCase('es-ES')).join(', ');
+const nube = 'M20 44 C7 44 4 29 16 26 C14 13 31 8 39 17 C44 4 67 4 71 18 C80 10 97 15 95 28 C108 28 110 44 96 44 Z';
+---
+<section class="hero" id="inicio" aria-labelledby="hero-titulo">
+  <div class="container hero-rejilla">
+    <div class="hero-texto">
+      <p class="hero-ante">Escuela de Mindfulness</p>
+      <h1 id="hero-titulo" class="hero-titulo">Aprende a vivir con…</h1>
+      <p class="sr-only">{frase}.</p>
+      <p class="rotador" aria-hidden="true" data-rotador>
+        {beneficios.map((b, i) => <span class:list={['rotador-palabra', { 'es-activa': i === 0 }]}>{b}</span>)}
+      </p>
+      <p class="hero-sub">Sesiones de mindfulness en directo por videoconferencia, con acompañamiento personal.</p>
+      <div class="hero-acciones">
+        <a href={url('consultame/#solicita')} class="btn btn--primario btn--grande" data-abrir-sesiones>Empieza ahora</a>
+        <a href="#como-es" class="btn btn--suave btn--grande">+ Info</a>
+      </div>
+    </div>
+
+    <div class="hero-visual" data-respira>
+      <svg class="respira-svg" viewBox="0 0 400 400" aria-hidden="true" focusable="false">
+        <path class="respira-halo" d={circulo} data-halo />
+        <path class="respira-blob" d={circulo} data-blob />
+      </svg>
+
+      <div class="nubes" aria-hidden="true">
+        <svg class="nube nube--1" viewBox="0 0 112 50" data-paralaje="0.25"><path pathLength="1" d={nube} /></svg>
+        <svg class="nube nube--2" viewBox="0 0 112 50" data-paralaje="0.4"><path pathLength="1" d={nube} /></svg>
+        <svg class="nube nube--3" viewBox="0 0 112 50" data-paralaje="0.15"><path pathLength="1" d={nube} /></svg>
+      </div>
+
+      <Image
+        src={budyCalma}
+        alt="Budy, la mascota de la escuela, medita sereno entre árboles y se imagina meditando"
+        widths={[280, 400, 560, 800]}
+        sizes="(min-width: 1024px) 400px, (min-width: 640px) 360px, 68vw"
+        loading="eager"
+        fetchpriority="high"
+        class="budy"
+      />
+
+      <p class="respira-guia" aria-hidden="true" data-guia>
+        <span data-fase="inspira">Inspira</span><span data-fase="espira">Espira</span>
+      </p>
+      <button type="button" class="pausa" aria-pressed="false" data-pausa>
+        <span class="sr-only" data-pausa-texto>Pausar la animación</span>
+        <svg class="pausa-icono-pausa" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><rect x="3.5" y="2.5" width="3" height="11" rx="1.2" /><rect x="9.5" y="2.5" width="3" height="11" rx="1.2" /></svg>
+        <svg class="pausa-icono-play" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 2.8v10.4a.8.8 0 0 0 1.2.7l8.3-5.2a.8.8 0 0 0 0-1.4L5.7 2.1a.8.8 0 0 0-1.2.7z" /></svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    padding-block: var(--s-5) var(--s-8);
+    background:
+      radial-gradient(60% 55% at 78% 45%, var(--cielo) 0%, rgb(230 242 250 / 0) 70%),
+      var(--blanco);
+    overflow: clip;
+  }
+  .hero-rejilla {
+    display: grid;
+    gap: var(--s-5);
+    align-items: center;
+  }
+  .hero-texto { order: 2; text-align: center; }
+  .hero-visual { order: 1; }
+
+  .hero-ante {
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gris-texto);
+    margin-bottom: var(--s-3);
+  }
+  .hero-titulo {
+    font-size: var(--fs-hero);
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+  }
+  /* Todas las palabras ocupan la misma celda: el bloque mide lo que la más larga
+     y no hay saltos de maquetación al cambiar. */
+  .rotador {
+    display: grid;
+    margin-top: var(--s-2);
+    font-size: clamp(1.875rem, 1.05rem + 3.2vw, 3.6rem);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    color: var(--turquesa-texto);
+  }
+  .rotador-palabra { grid-area: 1 / 1; visibility: hidden; }
+  .rotador-palabra.es-activa { visibility: visible; }
+  .rotador-palabra :global(.letra) { display: inline-block; white-space: pre; will-change: transform, opacity, filter; }
+
+  .hero-sub {
+    margin: var(--s-5) auto 0;
+    max-width: 34ch;
+    font-size: var(--fs-md);
+    line-height: 1.5;
+    color: var(--gris-texto);
+  }
+  .hero-acciones {
+    display: flex; flex-wrap: wrap; gap: var(--s-3);
+    justify-content: center;
+    margin-top: var(--s-6);
+  }
+
+  /* --- Visual: Budy y el círculo que respira --- */
+  .hero-visual {
+    position: relative;
+    width: min(100%, 320px);
+    margin: 0 auto 3rem;
+    aspect-ratio: 1 / 1.04;
+  }
+  .respira-svg {
+    position: absolute;
+    inset: 4% 0 auto;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+  .respira-blob { fill: var(--turquesa); }
+  .respira-halo { fill: var(--turquesa); opacity: 0.12; transform-origin: 200px 200px; transform: scale(1.12); }
+
+  :global(.budy) {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 74%;
+    transform: translateX(-50%);
+    filter: drop-shadow(0 18px 24px rgb(0 80 90 / 0.18));
+  }
+
+  .nubes { position: absolute; inset: 0; pointer-events: none; }
+  .nube { position: absolute; width: 22%; overflow: visible; }
+  .nube path {
+    fill: var(--blanco);
+    stroke: var(--cielo-trazo);
+    stroke-width: 2.2;
+    stroke-linejoin: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+  }
+  .nube--1 { top: 0; left: -2%; width: 24%; }
+  .nube--2 { top: 12%; right: -2%; width: 19%; }
+  .nube--3 { top: 48%; left: -3%; width: 15%; }
+  @media (min-width: 1024px) {
+    .nube--1 { top: 2%; left: -4%; width: 26%; }
+    .nube--2 { top: 10%; right: -8%; width: 21%; }
+    .nube--3 { top: 46%; left: -14%; width: 17%; }
+  }
+
+  .respira-guia {
+    position: absolute;
+    left: 0; right: 0; bottom: -2.25rem;
+    display: grid;
+    justify-items: center;
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gris-texto);
+    visibility: hidden;
+  }
+  .respira-guia span { grid-area: 1 / 1; opacity: 0; transition: opacity 900ms var(--ease-respira); }
+  :global(html.js) .hero-visual.esta-viva .respira-guia { visibility: visible; }
+  .respira-guia span.es-activa { opacity: 1; }
+
+  .pausa {
+    position: absolute;
+    right: 0; bottom: -2.6rem;
+    display: none;
+    place-items: center;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--linea);
+    background: var(--blanco);
+    color: var(--gris-texto);
+    transition: color var(--t-rapida) var(--ease-suave), border-color var(--t-rapida) var(--ease-suave);
+  }
+  .pausa:hover { color: var(--tinta); border-color: #c9c9d1; }
+  .pausa svg { fill: currentColor; }
+  :global(html.js) .hero-visual.esta-viva .pausa { display: grid; }
+  .pausa-icono-play, .pausa[aria-pressed='true'] .pausa-icono-pausa { display: none; }
+  .pausa[aria-pressed='true'] .pausa-icono-play { display: block; }
+
+  /* Entrada de las nubes: se dibuja el contorno y luego derivan despacio */
+  :global(html.js) .hero-visual.esta-viva .nube path { animation: nube-trazo 1.6s var(--ease-respira) both; }
+  :global(html.js) .hero-visual.esta-viva .nube--2 path { animation-delay: 0.35s; }
+  :global(html.js) .hero-visual.esta-viva .nube--3 path { animation-delay: 0.7s; }
+  :global(html.js) .hero-visual.esta-viva .nube { animation: nube-deriva 18s var(--ease-respira) 1.6s infinite alternate; }
+  :global(html.js) .hero-visual.esta-viva .nube--2 { animation-duration: 23s; animation-direction: alternate-reverse; }
+  :global(html.js) .hero-visual.esta-viva .nube--3 { animation-duration: 20s; }
+  :global(html.js) .hero-visual.esta-pausada .nube { animation-play-state: paused; }
+  @keyframes nube-trazo {
+    0% { stroke-dashoffset: 1; fill-opacity: 0; }
+    70% { fill-opacity: 0; }
+    100% { stroke-dashoffset: 0; fill-opacity: 1; }
+  }
+  @keyframes nube-deriva { from { translate: -10px 0; } to { translate: 14px 0; } }
+
+  @media (min-width: 640px) {
+    .hero-visual { width: min(100%, 420px); }
+  }
+  @media (min-width: 1024px) {
+    .hero { padding-block: var(--s-7) var(--s-9); min-height: min(820px, calc(100vh - var(--cabecera))); display: grid; align-items: center; }
+    .hero-rejilla { grid-template-columns: 1.08fr 0.92fr; gap: var(--s-7); }
+    .hero-texto { order: 1; text-align: left; }
+    .hero-visual { order: 2; width: min(100%, 520px); margin-bottom: 0; }
+    .hero-sub { margin-inline: 0; }
+    .hero-acciones { justify-content: flex-start; }
+  }
+</style>
+
+<script>
+  import { gsap } from 'gsap';
+
+  const reducido = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const visual = document.querySelector<HTMLElement>('[data-respira]');
+  const rotador = document.querySelector<HTMLElement>('[data-rotador]');
+
+  if (visual && rotador && !reducido) {
+    const blob = visual.querySelector<SVGPathElement>('[data-blob]')!;
+    const halo = visual.querySelector<SVGPathElement>('[data-halo]')!;
+    const fases = [...visual.querySelectorAll<HTMLElement>('[data-fase]')];
+    const pausa = visual.querySelector<HTMLButtonElement>('[data-pausa]')!;
+    const pausaTexto = visual.querySelector<HTMLElement>('[data-pausa-texto]')!;
+    visual.classList.add('esta-viva');
+
+    // ---------- Círculo que respira ----------
+    // Blob de 8 puntos con ruido suave (deformación ligera) y una escala
+    // que sube en 4 s (inspira) y baja en 6 s (espira), en bucle.
+    const N = 8, R = 168, AMP = 0.045;
+    const INSPIRA = 4, ESPIRA = 6, CICLO = INSPIRA + ESPIRA;
+    const MIN = 0.84, MAX = 1;
+    const semillas = Array.from({ length: N }, (_, i) => i * 1.7 + Math.random() * 3);
+    const suave = (x: number) => 0.5 - Math.cos(Math.PI * x) / 2; // sine.inOut
+
+    function ruta(escala: number, t: number, r = R, fase = 0) {
+      const p: [number, number][] = [];
+      for (let i = 0; i < N; i++) {
+        const a = (i / N) * Math.PI * 2;
+        const ondula = Math.sin(t * 0.35 + semillas[i] + fase) * 0.6 + Math.sin(t * 0.21 + semillas[i] * 2.3) * 0.4;
+        const rr = r * escala * (1 + AMP * ondula);
+        p.push([200 + Math.cos(a) * rr, 200 + Math.sin(a) * rr]);
+      }
+      let d = `M${p[0][0].toFixed(1)},${p[0][1].toFixed(1)}`;
+      for (let i = 0; i < N; i++) {
+        const p0 = p[(i - 1 + N) % N], p1 = p[i], p2 = p[(i + 1) % N], p3 = p[(i + 2) % N];
+        d += `C${(p1[0] + (p2[0] - p0[0]) / 6).toFixed(1)},${(p1[1] + (p2[1] - p0[1]) / 6).toFixed(1)} ${(p2[0] - (p3[0] - p1[0]) / 6).toFixed(1)},${(p2[1] - (p3[1] - p1[1]) / 6).toFixed(1)} ${p2[0].toFixed(1)},${p2[1].toFixed(1)}`;
+      }
+      return d + 'Z';
+    }
+
+    let reloj = 0, ultimo = performance.now(), activo = true, pausado = false, faseActual = '';
+    function marcaFase(f: string) {
+      if (f === faseActual) return;
+      faseActual = f;
+      fases.forEach((s) => s.classList.toggle('es-activa', s.dataset.fase === f));
+    }
+    function cuadro(ahora: number) {
+      const dt = Math.min(0.05, (ahora - ultimo) / 1000);
+      ultimo = ahora;
+      if (activo && !pausado) {
+        reloj += dt;
+        const c = reloj % CICLO;
+        const k = c < INSPIRA ? suave(c / INSPIRA) : 1 - suave((c - INSPIRA) / ESPIRA);
+        const escala = MIN + (MAX - MIN) * k;
+        blob.setAttribute('d', ruta(escala, reloj));
+        halo.setAttribute('d', ruta(MIN + (MAX - MIN) * Math.max(0, k - 0.06), reloj * 0.8, R * 1.13, 2));
+        marcaFase(c < INSPIRA ? 'inspira' : 'espira');
+      }
+      requestAnimationFrame(cuadro);
+    }
+    halo.style.transform = 'none';
+    requestAnimationFrame(cuadro);
+
+    // Solo se anima mientras se ve
+    new IntersectionObserver(([e]) => { activo = e.isIntersecting; }).observe(visual);
+
+    // ---------- Titular rotativo ----------
+    const palabras = [...rotador.querySelectorAll<HTMLElement>('.rotador-palabra')];
+    palabras.forEach((p) => {
+      const texto = p.textContent || '';
+      p.textContent = '';
+      [...texto].forEach((ch) => {
+        const s = document.createElement('span');
+        s.className = 'letra';
+        s.textContent = ch;
+        p.appendChild(s);
+      });
+    });
+    const tl = gsap.timeline({ repeat: -1, delay: 2.5 });
+    palabras.forEach((_, n) => {
+      const sale = palabras[n], entra = palabras[(n + 1) % palabras.length];
+      tl.to(sale.children, { autoAlpha: 0, y: -8, filter: 'blur(6px)', duration: 0.45, ease: 'power2.in', stagger: 0.015 })
+        .set(sale, { visibility: 'hidden' })
+        .set(entra, { visibility: 'visible' })
+        .fromTo(entra.children,
+          { autoAlpha: 0, y: 10, filter: 'blur(8px)' },
+          { autoAlpha: 1, y: 0, filter: 'blur(0px)', duration: 0.7, ease: 'power2.out', stagger: 0.025 })
+        .to({}, { duration: 1.35 });
+    });
+    new IntersectionObserver(([e]) => { if (!pausado) (e.isIntersecting ? tl.resume() : tl.pause()); }).observe(rotador);
+
+    // ---------- Pausa (WCAG 2.2.2) ----------
+    pausa.addEventListener('click', () => {
+      pausado = !pausado;
+      pausa.setAttribute('aria-pressed', String(pausado));
+      pausaTexto.textContent = pausado ? 'Reanudar la animación' : 'Pausar la animación';
+      visual.classList.toggle('esta-pausada', pausado);
+      pausado ? tl.pause() : tl.resume();
+    });
+  }
+</script>

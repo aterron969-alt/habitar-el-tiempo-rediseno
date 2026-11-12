@@ -1,0 +1,100 @@
+---
+import '@fontsource/nunito/latin-400.css';
+import '@fontsource/nunito/latin-600.css';
+import '@fontsource/nunito/latin-700.css';
+import '@fontsource/nunito/latin-800.css';
+import '../styles/global.css';
+import Cabecera from '../components/Cabecera.astro';
+import Pie from '../components/Pie.astro';
+import DialogoSesiones from '../components/DialogoSesiones.astro';
+import { url } from '../lib/url';
+import { ESCUELA, ORIGINAL } from '../data/sitio';
+
+interface Props {
+  titulo: string;
+  descripcion: string;
+  portada?: boolean;
+}
+const { titulo, descripcion, portada = false } = Astro.props;
+const canonica = new URL(Astro.url.pathname, Astro.site).href;
+const og = new URL(url('og.jpg'), Astro.site).href;
+
+const datos = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': `${ORIGINAL}/#escuela`,
+      name: ESCUELA,
+      alternateName: 'Habitar el Tiempo',
+      url: ORIGINAL,
+      logo: new URL(url('favicon-192.png'), Astro.site).href,
+      foundingDate: '2012',
+      founder: { '@id': `${ORIGINAL}/#rafael` },
+      employee: [{ '@id': `${ORIGINAL}/#rafael` }, { '@id': `${ORIGINAL}/#patricia` }],
+    },
+    {
+      '@type': 'Person',
+      '@id': `${ORIGINAL}/#rafael`,
+      name: 'Rafael de Silva',
+      jobTitle: 'Fundador e instructor de Mindfulness',
+      worksFor: { '@id': `${ORIGINAL}/#escuela` },
+      alumniOf: 'INEF de Madrid',
+    },
+    {
+      '@type': 'Person',
+      '@id': `${ORIGINAL}/#patricia`,
+      name: 'Patricia Villa',
+      jobTitle: 'Directora',
+      worksFor: { '@id': `${ORIGINAL}/#escuela` },
+    },
+  ],
+};
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{titulo}</title>
+    <meta name="description" content={descripcion} />
+    <!-- Demo pública: que Google no la confunda con la web oficial -->
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="canonical" href={canonica} />
+    <meta name="theme-color" content="#ffffff" />
+
+    <link rel="icon" type="image/png" sizes="32x32" href={url('favicon-32.png')} />
+    <link rel="icon" type="image/png" sizes="192x192" href={url('favicon-192.png')} />
+    <link rel="apple-touch-icon" href={url('apple-touch-icon.png')} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_ES" />
+    <meta property="og:site_name" content="Habitar el Tiempo" />
+    <meta property="og:title" content={titulo} />
+    <meta property="og:description" content={descripcion} />
+    <meta property="og:url" content={canonica} />
+    <meta property="og:image" content={og} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Budy, la mascota de Habitar el Tiempo, meditando" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(datos)} />
+    <!-- Marca que el JS está disponible: las animaciones solo se aplican con esta clase -->
+    <script is:inline>document.documentElement.classList.add('js');</script>
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="saltar" href="#contenido">Saltar al contenido</a>
+    <Cabecera portada={portada} />
+    <main id="contenido" tabindex="-1">
+      <slot />
+    </main>
+    <Pie />
+    <DialogoSesiones />
+    <script>
+      import '../scripts/movimiento';
+      import '../scripts/formularios';
+    </script>
+  </body>
+</html>
