@@ -35,7 +35,8 @@ function revelados() {
   // Grupos escalonados: [data-revelar-grupo] > hijos directos
   document.querySelectorAll<HTMLElement>('[data-revelar-grupo]').forEach((g) => {
     gsap.from(g.children, {
-      autoAlpha: 0,
+      opacity: 0, // solo opacidad: con autoAlpha (visibility) los lectores de pantalla no verían el contenido hasta hacer scroll
+     
       y: 20,
       duration: 0.8,
       ease: 'power2.out',
@@ -45,7 +46,7 @@ function revelados() {
   });
   document.querySelectorAll<HTMLElement>('[data-revelar]').forEach((el) => {
     gsap.from(el, {
-      autoAlpha: 0,
+      opacity: 0,
       y: 22,
       duration: 0.85,
       ease: 'power2.out',

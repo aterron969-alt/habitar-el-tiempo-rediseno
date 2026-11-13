@@ -59,6 +59,10 @@ import { url } from '../lib/url';
     overflow-x: auto;
     overscroll-behavior-x: contain;
     scroll-snap-type: x mandatory;
+    /* Igual que el padding lateral: así la primera tarjeta ya está «encajada» al cargar.
+       Sin esto Chrome desplaza la pista 2 px al cargar, lo cuenta como scroll
+       y deja de medir el LCP de la página. */
+    scroll-padding-inline: 2px;
     scroll-behavior: smooth;
     scrollbar-width: none;
     padding: var(--s-2) 2px var(--s-5);
