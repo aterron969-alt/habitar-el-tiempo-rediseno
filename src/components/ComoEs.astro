@@ -10,157 +10,119 @@ import { url } from '../lib/url';
 ---
 <section class="seccion como" aria-labelledby="como-titulo">
   <div class="container">
-    <div class="titulo-seccion" data-revelar>
-      <h2 id="como-titulo">{comoEs.antetitulo}</h2>
+    <div class="titulo-seccion como-titulo" id="como-es" data-revelar>
+      <span class="antetitulo">{comoEs.antetitulo}</span>
+      <h2 id="como-titulo">{comoEs.titulo}</h2>
     </div>
 
-    <div class="como-rejilla">
-      <figure class="como-tarjeta" data-revelar>
-        <Image
-          src={alumna}
-          alt="Ilustración: una alumna medita en casa mientras sigue una sesión por videoconferencia"
-          widths={[400, 600, 900]}
-          sizes="(min-width: 1024px) 520px, 92vw"
-          class="como-img"
-        />
-        <figcaption class="como-pie">
-          <span class="como-pie-titulo">{comoEs.tarjeta.titulo}</span>
-          <span class="como-pie-sub">{comoEs.tarjeta.sub}</span>
-          <a href={url('consultame/#solicita')} class="btn btn--primario" data-abrir-sesiones>Empieza ahora</a>
-        </figcaption>
-      </figure>
+    <ol role="list" class="camino" data-revelar-grupo>
+      {comoEs.puntos.map((p, i) => (
+        <li class="etapa">
+          <span class="etapa-cab">
+            <span class="etapa-num" aria-hidden="true">{i + 1}</span>
+            <span class="etapa-icono"><Icono nombre={p.icono} tam={24} /></span>
+          </span>
+          <p>{p.texto}</p>
+        </li>
+      ))}
+    </ol>
 
-      <div class="como-texto" id="como-es">
-        <h3 class="como-h3" data-revelar>{comoEs.titulo}</h3>
-        <ol role="list" class="pasos" data-revelar-grupo>
-          {comoEs.puntos.map((p, i) => (
-            <li class="paso">
-              <span class="paso-icono"><Icono nombre={p.icono} tam={26} /><span class="paso-n" aria-hidden="true">{i + 1}</span></span>
-              <p>{p.texto}</p>
-            </li>
-          ))}
-        </ol>
-
-        <div class="aportacion" data-revelar>
-          <p>
-            <a href={url('mecenazgo/')}>{comoEs.mecenazgo}</a>
-          </p>
-          <!-- PENDIENTE: importe sugerido de la escuela -->
-          <p class="aportacion-importe">
-            <Icono nombre="corazon" tam={22} />
-            {comoEs.aportacion}
-          </p>
-        </div>
-
-        <div class="acciones" data-revelar>
-          <a href={url('consultame/#solicita')} class="btn btn--primario btn--grande" data-abrir-sesiones>Empieza ahora</a>
-        </div>
+    <div class="sesion" data-revelar>
+      <Image
+        src={alumna}
+        alt="Ilustración: una alumna medita en casa mientras sigue una sesión por videoconferencia"
+        widths={[400, 600, 900]}
+        sizes="(min-width: 1024px) 520px, 92vw"
+        class="sesion-img"
+      />
+      <div class="sesion-texto">
+        <p class="sesion-titulo">{comoEs.tarjeta.titulo}</p>
+        <p class="sesion-sub">{comoEs.tarjeta.sub}</p>
+        <p class="sesion-mec"><a href={url('mecenazgo/')}>{comoEs.mecenazgo}</a></p>
+        <!-- PENDIENTE: importe sugerido de la escuela -->
+        <p class="sesion-aporta"><Icono nombre="corazon" tam={22} />{comoEs.aportacion}</p>
+        <a href={url('consultame/#solicita')} class="btn btn--primario btn--grande" data-abrir-sesiones>Empieza ahora</a>
       </div>
     </div>
 
     <figure class="cita" data-revelar>
-      <Image src={patricia} alt="Patricia Villa, directora de la escuela" width={140} densities={[1, 2]} class="cita-foto" />
-      <blockquote class="cita-texto">
-        <p>{citaPatricia.texto}</p>
-      </blockquote>
-      <figcaption class="cita-autora">{citaPatricia.nombre}</figcaption>
+      <Image src={patricia} alt="Patricia Villa, directora de la escuela" width={170} densities={[1, 2]} class="cita-foto" />
+      <div>
+        <blockquote class="cita-texto"><p>“{citaPatricia.texto}”</p></blockquote>
+        <figcaption class="cita-autora">{citaPatricia.nombre}</figcaption>
+      </div>
     </figure>
   </div>
 </section>
 
 <style>
-  .como-rejilla { display: grid; gap: var(--s-7); align-items: start; }
+  .como-titulo { scroll-margin-top: calc(var(--cabecera) + 16px); }
 
-  .como-tarjeta {
+  /* Tres etapas unidas por un camino punteado */
+  .camino { position: relative; display: grid; gap: var(--s-5); }
+  .etapa {
     position: relative;
+    display: grid; gap: var(--s-4); align-content: start;
+    padding: var(--s-6);
     border-radius: var(--r-lg);
-    overflow: hidden;
-    background: var(--blanco);
-    box-shadow: var(--sombra-2);
+    background: var(--niebla);
+    transition: transform var(--t-lenta) var(--ease-suave);
   }
-  :global(.como-img) { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
-  .como-pie {
-    display: grid; gap: var(--s-1);
-    justify-items: start;
-    padding: var(--s-5);
-  }
-  .como-pie-titulo { font-size: var(--fs-lg); font-weight: 800; line-height: 1.2; }
-  .como-pie-sub { color: var(--gris-texto); margin-bottom: var(--s-3); }
-
-  .como-texto { scroll-margin-top: calc(var(--cabecera) + 16px); }
-  .como-h3 { font-size: var(--fs-xl); margin-bottom: var(--s-5); color: var(--turquesa-texto); }
-
-  .pasos { display: grid; gap: var(--s-5); }
-  .paso { display: grid; grid-template-columns: auto 1fr; gap: var(--s-4); align-items: start; }
-  .paso p { color: #3a3a3e; }
-  .paso-icono {
-    position: relative;
+  .etapa:hover { transform: translateY(-4px); }
+  .etapa p { color: #3a3a3e; }
+  .etapa-cab { display: flex; align-items: center; justify-content: space-between; }
+  .etapa-num {
     display: grid; place-items: center;
-    width: 52px; height: 52px;
-    border-radius: 50%;
-    background: var(--turquesa-velo);
-    color: var(--turquesa-texto);
-  }
-  .paso-n {
-    position: absolute; right: -4px; top: -4px;
-    display: grid; place-items: center;
-    width: 22px; height: 22px;
+    width: 56px; height: 56px;
     border-radius: 50%;
     background: var(--turquesa-texto);
     color: var(--blanco);
-    font-size: 0.75rem; font-weight: 800;
-    box-shadow: 0 0 0 3px var(--blanco);
+    font-size: 1.3rem; font-weight: 800;
+    box-shadow: 0 0 0 8px var(--turquesa-velo);
+  }
+  .etapa-icono { color: var(--turquesa-texto); opacity: 0.7; }
+  @media (min-width: 950px) {
+    .camino { grid-template-columns: repeat(3, 1fr); }
+    .camino::before {
+      content: '';
+      position: absolute; top: calc(var(--s-6) + 28px); left: 14%; right: 14%;
+      border-top: 2px dashed #9fd9df;
+    }
+    .etapa { background: color-mix(in srgb, var(--niebla) 92%, transparent); }
   }
 
-  .aportacion {
-    margin-top: var(--s-6);
+  /* Tarjeta de sesión con la ilustración */
+  .sesion {
+    display: grid; gap: var(--s-6); align-items: center;
+    margin-top: var(--s-8);
     padding: var(--s-5);
-    border-radius: var(--r-md);
-    background: var(--niebla);
-    display: grid; gap: var(--s-3);
+    border-radius: var(--r-xl);
+    background: var(--cielo);
   }
-  .aportacion a { color: var(--tinta); text-decoration-color: color-mix(in srgb, var(--turquesa) 60%, white); }
-  .aportacion a:hover { color: var(--turquesa-texto); }
-  .aportacion-importe {
-    display: flex; align-items: center; gap: var(--s-2);
-    font-weight: 800; font-size: var(--fs-md);
-    color: var(--turquesa-texto);
+  :global(.sesion-img) { width: 100%; border-radius: var(--r-lg); aspect-ratio: 3 / 2; object-fit: cover; }
+  .sesion-texto { display: grid; gap: var(--s-2); justify-items: start; padding: var(--s-2); }
+  .sesion-titulo { font-size: var(--fs-xl); font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
+  .sesion-sub { font-size: var(--fs-md); color: var(--gris-texto); }
+  .sesion-mec { margin-top: var(--s-3); }
+  .sesion-mec a { color: var(--tinta); text-decoration-color: color-mix(in srgb, var(--turquesa) 60%, white); }
+  .sesion-mec a:hover { color: var(--turquesa-texto); }
+  .sesion-aporta { display: flex; align-items: center; gap: var(--s-2); margin-bottom: var(--s-4); font-size: var(--fs-lg); font-weight: 800; color: var(--turquesa-texto); }
+  @media (min-width: 900px) {
+    .sesion { grid-template-columns: 1fr 1fr; gap: var(--s-8); padding: var(--s-6); }
   }
-  .acciones { display: flex; flex-wrap: wrap; gap: var(--s-3); margin-top: var(--s-5); }
 
   /* Cita de Patricia */
   .cita {
-    position: relative;
-    margin: var(--s-9) auto 0;
-    max-width: 860px;
-    padding: var(--s-8) var(--s-5) var(--s-6);
-    border-radius: var(--r-lg);
-    background: linear-gradient(180deg, var(--turquesa-velo), var(--blanco));
-    text-align: center;
+    display: grid; gap: var(--s-6); align-items: center; justify-items: center; text-align: center;
+    margin-top: var(--s-8);
+    padding: clamp(28px, 5vw, 64px);
+    border-radius: var(--r-xl);
+    background: linear-gradient(135deg, var(--turquesa-velo), var(--blanco) 70%);
   }
-  :global(.cita-foto) {
-    position: absolute; left: 50%; top: 0;
-    width: 104px; height: 104px;
-    transform: translate(-50%, -50%);
-    border-radius: 50%;
-    object-fit: cover;
-    background: var(--blanco);
-    box-shadow: 0 0 0 6px var(--blanco), var(--sombra-2);
-  }
-  .cita-texto p {
-    font-size: var(--fs-md);
-    line-height: 1.6;
-    color: var(--tinta);
-    max-width: 62ch;
-    margin-inline: auto;
-  }
-  .cita-texto p::before { content: '“'; }
-  .cita-texto p::after { content: '”'; }
+  :global(.cita-foto) { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; background: var(--blanco); box-shadow: 0 0 0 10px var(--blanco); }
+  .cita-texto p { font-size: clamp(1.2rem, 1.05rem + 0.7vw, 1.6rem); font-weight: 600; line-height: 1.5; }
   .cita-autora { margin-top: var(--s-4); font-weight: 800; color: var(--turquesa-texto); }
-
-  @media (min-width: 1024px) {
-    .como-rejilla { grid-template-columns: 1fr 1.1fr; gap: var(--s-8); }
-    .como-tarjeta { position: sticky; top: calc(var(--cabecera) + var(--s-5)); }
-    .cita { padding: var(--s-8) var(--s-8) var(--s-7); }
+  @media (min-width: 900px) {
+    .cita { grid-template-columns: auto 1fr; justify-items: start; text-align: left; gap: var(--s-8); }
   }
 </style>

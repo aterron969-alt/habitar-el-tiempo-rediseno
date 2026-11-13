@@ -14,7 +14,7 @@ const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replac
 const conEnlaces = (s: string) =>
   esc(s).replace(/\[([^\]]+)\]\((https:[^)]+)\)/g, '<a href="$2" rel="noopener">$1</a>');
 ---
-<section class="seccion acerca" id="acerca" aria-labelledby="acerca-titulo">
+<section class="seccion seccion--niebla seccion--redonda acerca" id="acerca" aria-labelledby="acerca-titulo">
   <div class="container acerca-rejilla">
     <div class="acerca-perfil" data-revelar>
       <div class="acerca-foto">
@@ -64,12 +64,12 @@ const conEnlaces = (s: string) =>
   .acerca-rejilla { display: grid; gap: var(--s-7); }
   .acerca-perfil { display: grid; justify-items: center; gap: var(--s-3); text-align: center; }
   .acerca-foto {
-    width: min(240px, 64vw);
+    width: min(280px, 70vw);
     aspect-ratio: 1;
     border-radius: 50%;
     background: var(--turquesa);
     overflow: hidden;
-    box-shadow: 0 0 0 10px var(--turquesa-velo);
+    box-shadow: 0 0 0 12px var(--blanco), var(--sombra-caja);
   }
   :global(.acerca-img) { width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; }
   .acerca-nombre { margin-top: var(--s-3); font-size: var(--fs-lg); font-weight: 800; }
@@ -85,7 +85,8 @@ const conEnlaces = (s: string) =>
     padding: 5px;
     margin-bottom: var(--s-6);
     border-radius: var(--r-pill);
-    background: var(--niebla);
+    background: var(--blanco);
+    box-shadow: var(--sombra-1);
     width: fit-content;
   }
   .pestanas-lista[hidden] { display: none; }
@@ -101,7 +102,7 @@ const conEnlaces = (s: string) =>
     transition: background-color var(--t-media) var(--ease-suave), color var(--t-media) var(--ease-suave), box-shadow var(--t-media) var(--ease-suave);
   }
   .pestanas-lista button:hover { color: var(--tinta); }
-  .pestanas-lista button[aria-selected='true'] { background: var(--blanco); color: var(--turquesa-texto); box-shadow: var(--sombra-1); }
+  .pestanas-lista button[aria-selected='true'] { background: var(--turquesa-texto); color: var(--blanco); }
 
   .pestanas.es-pestanas .bloque + .bloque { margin-top: 0; }
   .pestanas.es-pestanas .bloque-titulo { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
@@ -136,9 +137,9 @@ const conEnlaces = (s: string) =>
   .pestanas.es-acordeon .bloque-panel { padding-bottom: var(--s-5); }
 
   @media (min-width: 1024px) {
-    .acerca-rejilla { grid-template-columns: 300px 1fr; gap: var(--s-9); align-items: start; }
+    .acerca-rejilla { grid-template-columns: 330px 1fr; gap: var(--s-9); align-items: start; }
     .acerca-perfil { position: sticky; top: calc(var(--cabecera) + var(--s-6)); }
-    .acerca-foto { width: 260px; }
+    .acerca-foto { width: 300px; }
   }
 </style>
 

@@ -1,0 +1,44 @@
+---
+// Cabecera turquesa de las páginas interiores (mismo lenguaje que el hero de la portada).
+// Slots: el contenido de texto va en el slot por defecto y la imagen en slot="visual".
+interface Props {
+  /** Color de la sección que viene después, para que la ola encaje. */
+  siguiente?: string;
+  centrada?: boolean;
+}
+const { siguiente = 'var(--blanco)', centrada = false } = Astro.props;
+const conVisual = Astro.slots.has('visual');
+---
+<section class:list={['cabeza', { 'cabeza--centrada': centrada, 'cabeza--visual': conVisual }]}>
+  <div class="container cabeza-rejilla">
+    <div class="cabeza-texto" data-revelar><slot /></div>
+    {conVisual && <div class="cabeza-visual"><slot name="visual" /></div>}
+  </div>
+  <svg class="ola" viewBox="0 0 1440 70" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M0 40 C 240 0 480 0 720 30 S 1200 70 1440 30 V70 H0Z" fill={siguiente} /></svg>
+</section>
+
+<style>
+  .cabeza {
+    position: relative;
+    padding: calc(var(--cabecera) + var(--s-6)) 0 calc(var(--s-8) + 30px);
+    background: var(--fondo-turquesa);
+    color: var(--blanco);
+    overflow: clip;
+  }
+  .cabeza :focus-visible { outline-color: var(--blanco); }
+  .cabeza-rejilla { display: grid; gap: var(--s-6); align-items: center; }
+  .cabeza--centrada .cabeza-rejilla { justify-items: center; text-align: center; }
+  .cabeza-texto { display: grid; gap: var(--s-3); max-width: 46rem; }
+  .cabeza--centrada .cabeza-texto { justify-items: center; }
+  .cabeza-texto :global(.cabeza-ante) {
+    font-size: var(--fs-sm); font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase;
+    color: rgb(255 255 255 / 0.9);
+  }
+  .cabeza-texto :global(h1) { font-size: clamp(2.3rem, 1.4rem + 3.8vw, 4.8rem); font-weight: 800; letter-spacing: -0.035em; line-height: 1.04; }
+  .cabeza-texto :global(p:not(.cabeza-ante)) { font-size: var(--fs-md); line-height: 1.5; color: var(--blanco); }
+  .cabeza-visual { display: grid; place-items: center; }
+  .cabeza-visual :global(img) { filter: drop-shadow(0 26px 34px rgb(0 50 60 / 0.3)); }
+  @media (min-width: 900px) {
+    .cabeza--visual .cabeza-rejilla { grid-template-columns: 1.2fr 0.8fr; }
+  }
+</style>

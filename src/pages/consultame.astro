@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import Campo from '../components/Campo.astro';
+import CabezaPagina from '../components/CabezaPagina.astro';
 import AvisoDemo from '../components/AvisoDemo.astro';
 import budy from '../assets/orig/budy-teleoperador.webp';
 import alumna from '../assets/orig/alumna-curso-mindfulness-onlive.webp';
@@ -13,14 +14,14 @@ import '../styles/formularios.css';
   titulo="Pregunta aquí · Habitar el Tiempo"
   descripcion="¿En qué podemos ayudarte? Escribe tu consulta a la Escuela de Mindfulness Habitar el Tiempo y te responderemos personalmente."
 >
-  <section class="seccion consulta">
-    <div class="container consulta-rejilla">
-      <div class="consulta-intro" data-revelar>
-        <Image src={budy} alt="Budy con cascos de teleoperador, listo para atenderte" width={220} densities={[1, 2]} loading="eager" class="consulta-budy" />
-        <h1 class="titulo-pagina">¡Hola!</h1>
-        <p class="lead">¿En qué podemos ayudarte?</p>
-      </div>
+  <CabezaPagina>
+    <h1>¡Hola!</h1>
+    <p>¿En qué podemos ayudarte?</p>
+    <Image slot="visual" src={budy} alt="Budy con cascos de teleoperador, listo para atenderte" width={220} densities={[1, 2]} loading="eager" class="consulta-budy" />
+  </CabezaPagina>
 
+  <section class="seccion consulta">
+    <div class="container">
       <div class="consulta-caja" data-revelar="0.1">
         <!-- PENDIENTE: conectar con Formspree o con el backend real de la escuela
              (action="https://formspree.io/f/XXXX" method="POST" y quitar data-demo). -->
@@ -45,7 +46,7 @@ import '../styles/formularios.css';
     </div>
   </section>
 
-  <section class="seccion seccion--niebla" id="solicita" aria-labelledby="aprende-titulo">
+  <section class="seccion seccion--cielo seccion--redonda" id="solicita" aria-labelledby="aprende-titulo">
     <div class="container aprende" data-revelar>
       <Image src={alumna} alt="Ilustración: una alumna medita en casa mientras sigue una sesión por videoconferencia" widths={[400, 600, 900]} sizes="(min-width: 900px) 480px, 92vw" class="aprende-img" />
       <div>
@@ -58,28 +59,22 @@ import '../styles/formularios.css';
 </Base>
 
 <style>
-  .consulta-rejilla { display: grid; gap: var(--s-7); align-items: start; }
-  .consulta-intro { display: grid; justify-items: center; text-align: center; gap: var(--s-2); }
-  :global(.consulta-budy) { width: 180px; height: 180px; border-radius: 50%; margin-bottom: var(--s-3); }
-  .titulo-pagina { font-size: var(--fs-2xl); font-weight: 800; letter-spacing: -0.025em; }
+  .consulta { padding-top: var(--s-6); }
+  :global(.consulta-budy) { width: 200px; height: 200px; border-radius: 50%; box-shadow: 0 0 0 10px rgb(255 255 255 / 0.2); }
   .consulta-caja {
+    max-width: 760px; margin-inline: auto;
     padding: var(--s-6) var(--s-5);
     border-radius: var(--r-lg);
     background: var(--blanco);
-    border: 1px solid var(--linea);
-    box-shadow: var(--sombra-2);
+    box-shadow: var(--sombra-caja);
   }
   .consulta-caja .btn { justify-self: start; }
   .grupo { border: 0; padding: 0; margin: 0; display: grid; gap: var(--s-2); }
   .grupo legend { font-weight: 700; font-size: var(--fs-sm); margin-bottom: var(--s-2); padding: 0; }
-  @media (min-width: 900px) {
-    .consulta-rejilla { grid-template-columns: 0.8fr 1.2fr; gap: var(--s-8); }
-    .consulta-intro { justify-items: start; text-align: left; position: sticky; top: calc(var(--cabecera) + var(--s-6)); }
-    .consulta-caja { padding: var(--s-7); }
-  }
+  @media (min-width: 900px) { .consulta-caja { padding: var(--s-7); } }
 
   .aprende { display: grid; gap: var(--s-6); align-items: center; }
-  :global(.aprende-img) { width: 100%; max-width: 480px; border-radius: var(--r-lg); box-shadow: var(--sombra-1); }
+  :global(.aprende-img) { width: 100%; max-width: 480px; border-radius: var(--r-lg); box-shadow: var(--sombra-caja); }
   .aprende .h2 { margin-bottom: var(--s-5); }
   @media (min-width: 900px) { .aprende { grid-template-columns: auto 1fr; gap: var(--s-8); } }
 </style>

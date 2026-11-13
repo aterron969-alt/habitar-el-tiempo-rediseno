@@ -1,60 +1,64 @@
 ---
 // Portada · «Sesiones en directo · Mindfulness online» (ancla #sesiones del menú).
+// Mosaico de tarjetas sobre azul cielo: ilustración, cifras (con contador) y «¡Estés donde estés!».
 import { Image } from 'astro:assets';
 import Icono from './Icono.astro';
 import ilustracion from '../assets/orig/sesiones-individuales.webp';
 import { sesiones } from '../data/portada';
 import { url } from '../lib/url';
+
 // «8.000» con punto de millar (toLocaleString('es-ES') no lo pone en cifras de 4 dígitos).
 const fmt = (n: number, anio?: boolean) => (anio ? String(n) : String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
+const cifras = sesiones.puntos.filter((p) => p.cifra !== undefined);
+const otros = sesiones.puntos.filter((p) => p.cifra === undefined);
 ---
-<section class="seccion sesiones" id="sesiones" aria-labelledby="sesiones-titulo">
-  <div class="container sesiones-rejilla">
-    <div class="sesiones-visual" data-revelar>
-      <Image
-        src={ilustracion}
-        alt="Ilustración: una alumna y su instructor conectados por videoconferencia"
-        widths={[360, 560, 760]}
-        sizes="(min-width: 1024px) 560px, 92vw"
-        class="sesiones-img"
-      />
+<section class="seccion seccion--cielo sesiones" id="sesiones" aria-labelledby="sesiones-titulo">
+  <div class="container">
+    <div class="titulo-seccion" data-revelar>
+      <span class="antetitulo">{sesiones.antetitulo}</span>
+      <h2 id="sesiones-titulo">{sesiones.titulo}</h2>
     </div>
 
-    <div class="sesiones-texto">
-      <div class="titulo-seccion titulo-seccion--izq" data-revelar>
-        <span class="antetitulo">{sesiones.antetitulo}</span>
-        <h2 id="sesiones-titulo">{sesiones.titulo}</h2>
-      </div>
+    <ul role="list" class="mosaico" data-revelar-grupo>
+      <li class="caja caja--img">
+        <Image
+          src={ilustracion}
+          alt="Ilustración: una alumna y su instructor conectados por videoconferencia"
+          widths={[360, 560, 760]}
+          sizes="(min-width: 1024px) 560px, 88vw"
+          class="sesiones-img"
+        />
+      </li>
+      {cifras.map((p) => (
+        <li class="caja caja--cifra">
+          {p.anio ? (
+            <>
+              <span>{p.texto}</span>
+              <strong class="cifra" data-contador={p.cifra} data-desde={p.desde} data-anio>{fmt(p.cifra!, true)}</strong>
+            </>
+          ) : (
+            <>
+              <strong class="cifra" aria-hidden="true"><span data-contador={p.cifra} data-desde={p.desde}>{fmt(p.cifra!)}</span>+</strong>
+              <span><span class="sr-only">{p.prefijo} {fmt(p.cifra!)} </span>{p.texto}</span>
+            </>
+          )}
+        </li>
+      ))}
+      <li class="caja caja--tur">
+        <strong class="tur-titulo">{sesiones.cierre}</strong>
+        <ul role="list" class="tur-lista">
+          {otros.map((p) => <li><Icono nombre={p.icono} tam={22} /><span>{p.texto}</span></li>)}
+        </ul>
+      </li>
+    </ul>
 
-      <ul role="list" class="puntos" data-revelar-grupo>
-        {sesiones.puntos.map((p) => (
-          <li class="punto">
-            <span class="punto-icono"><Icono nombre={p.icono} tam={26} /></span>
-            <span class="punto-texto">
-              {p.cifra === undefined ? (
-                p.texto
-              ) : p.anio ? (
-                <>{p.texto} <strong class="cifra" data-contador={p.cifra} data-desde={p.desde} data-anio>{fmt(p.cifra, true)}</strong></>
-              ) : (
-                <>{p.prefijo} <strong class="cifra" data-contador={p.cifra} data-desde={p.desde}>{fmt(p.cifra)}</strong> {p.texto}</>
-              )}
-            </span>
-          </li>
-        ))}
-      </ul>
-
-      <a class="enlace-mecenazgo" href={url('mecenazgo/')} data-revelar>
-        <span class="punto-icono punto-icono--lila"><Icono nombre="corazon" tam={22} /></span>
+    <div class="sesiones-pie" data-revelar>
+      <a class="enlace-mecenazgo" href={url('mecenazgo/')}>
+        <Icono nombre="corazon" tam={20} />
         <span>{sesiones.mecenazgo}</span>
         <Icono nombre="flechaDer" tam={18} clase="enlace-flecha" />
       </a>
-
-      <p class="sesiones-cierre" data-revelar>
-        <Icono nombre="globo" tam={22} />
-        {sesiones.cierre}
-      </p>
-
-      <div class="acciones" data-revelar>
+      <div class="acciones">
         <a href={url('consultame/#solicita')} class="btn btn--primario btn--grande" data-abrir-sesiones>Empieza ahora</a>
         <a href="#como-es" class="btn btn--suave btn--grande">+ Info</a>
       </div>
@@ -63,70 +67,65 @@ const fmt = (n: number, anio?: boolean) => (anio ? String(n) : String(n).replace
 </section>
 
 <style>
-  .sesiones { background: var(--niebla); }
-  .sesiones-rejilla { display: grid; gap: var(--s-7); align-items: center; }
-  .sesiones-visual {
-    position: relative;
+  .sesiones { padding-top: var(--s-7); }
+  .mosaico { display: grid; gap: var(--s-4); }
+  .caja {
     border-radius: var(--r-lg);
-    background: radial-gradient(70% 70% at 50% 45%, var(--blanco) 0%, var(--cielo) 100%);
-    padding: clamp(1.25rem, 4vw, 2.5rem);
-  }
-  :global(.sesiones-img) { width: 100%; height: auto; }
-
-
-  .puntos { display: grid; gap: var(--s-3); }
-  .punto {
-    display: flex; align-items: center; gap: var(--s-4);
-    padding: var(--s-3) var(--s-4) var(--s-3) var(--s-3);
     background: var(--blanco);
-    border-radius: var(--r-md);
-    box-shadow: var(--sombra-1);
-    font-size: var(--fs-md);
-    font-weight: 600;
-    line-height: 1.3;
+    padding: var(--s-6);
+    box-shadow: var(--sombra-caja);
+    transition: transform var(--t-lenta) var(--ease-suave);
   }
-  .punto-texto::first-letter { text-transform: uppercase; }
-  .cifra { font-weight: 800; color: var(--turquesa-texto); font-variant-numeric: tabular-nums; }
-  .punto-icono {
-    flex: none;
+  .caja:hover { transform: translateY(-4px); }
+  .caja--img {
+    padding: var(--s-5);
     display: grid; place-items: center;
-    width: 48px; height: 48px;
-    border-radius: 50%;
-    background: var(--turquesa-velo);
-    color: var(--turquesa-texto);
+    background: linear-gradient(160deg, var(--blanco), var(--turquesa-velo));
   }
-  .punto-icono--lila { width: 42px; height: 42px; background: color-mix(in srgb, var(--lila) 22%, white); color: #6b4a85; }
+  :global(.sesiones-img) { width: 100%; max-width: 520px; height: auto; }
 
+  .caja--cifra { display: flex; flex-direction: column; justify-content: flex-end; gap: var(--s-2); min-height: 170px; }
+  .cifra {
+    font-size: clamp(2.8rem, 2rem + 2.6vw, 4.4rem);
+    font-weight: 800; letter-spacing: -0.04em; line-height: 1;
+    color: var(--turquesa-texto);
+    font-variant-numeric: tabular-nums;
+  }
+  .caja--cifra > span { font-size: var(--fs-md); font-weight: 700; }
+  .caja--cifra > span::first-letter { text-transform: uppercase; }
+
+  .caja--tur { background: var(--turquesa-texto); color: var(--blanco); display: flex; flex-direction: column; justify-content: space-between; gap: var(--s-4); }
+  .tur-titulo { font-size: clamp(1.6rem, 1.2rem + 1.6vw, 2.5rem); font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
+  .tur-lista { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-5); }
+  .tur-lista li { display: flex; align-items: center; gap: var(--s-2); font-weight: 700; }
+  .tur-lista li span::first-letter { text-transform: uppercase; }
+
+  .sesiones-pie { display: grid; justify-items: center; gap: var(--s-5); margin-top: var(--s-7); }
   .enlace-mecenazgo {
-    display: flex; align-items: center; gap: var(--s-3);
-    margin-top: var(--s-5);
-    padding: var(--s-2) var(--s-4) var(--s-2) var(--s-2);
-    border: 1px dashed color-mix(in srgb, var(--lila) 70%, white);
+    display: inline-flex; align-items: center; gap: var(--s-3);
+    padding: var(--s-3) var(--s-5);
     border-radius: var(--r-pill);
+    background: var(--blanco);
     color: var(--tinta);
-    font-weight: 600;
+    font-weight: 700;
     text-decoration: none;
-    transition: background-color var(--t-media) var(--ease-suave), border-color var(--t-media) var(--ease-suave);
+    box-shadow: var(--sombra-1);
+    transition: transform var(--t-media) var(--ease-suave);
   }
-  .enlace-mecenazgo span:nth-child(2)::first-letter { text-transform: uppercase; }
-  .enlace-mecenazgo:hover { background: var(--blanco); border-color: var(--lila); }
-  .enlace-mecenazgo :global(.enlace-flecha) { margin-left: auto; color: var(--gris-texto); transition: transform var(--t-media) var(--ease-suave); }
+  .enlace-mecenazgo :global(.icono:first-child) { color: #6b4a85; }
+  .enlace-mecenazgo span::first-letter { text-transform: uppercase; }
+  .enlace-mecenazgo:hover { transform: translateY(-2px); }
+  .enlace-mecenazgo :global(.enlace-flecha) { color: var(--gris-texto); transition: transform var(--t-media) var(--ease-suave); }
   .enlace-mecenazgo:hover :global(.enlace-flecha) { transform: translateX(3px); }
-
-  .sesiones-cierre {
-    display: flex; align-items: center; gap: var(--s-2);
-    margin-top: var(--s-6);
-    font-size: var(--fs-lg);
-    font-weight: 800;
-    color: var(--turquesa-texto);
-  }
-  .acciones { display: flex; flex-wrap: wrap; gap: var(--s-3); margin-top: var(--s-5); }
+  .acciones { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s-3); }
 
   @media (min-width: 640px) {
-    .puntos { grid-template-columns: 1fr 1fr; }
-    .punto { flex-direction: column; align-items: flex-start; gap: var(--s-3); padding: var(--s-4) var(--s-5) var(--s-5); }
+    .mosaico { grid-template-columns: 1fr 1fr; }
+    .caja--img, .caja--tur { grid-column: span 2; }
   }
   @media (min-width: 1024px) {
-    .sesiones-rejilla { grid-template-columns: 0.95fr 1.05fr; gap: var(--s-8); }
+    .mosaico { grid-template-columns: repeat(4, 1fr); grid-auto-rows: minmax(210px, auto); }
+    .caja--img { grid-column: span 2; grid-row: span 2; }
+    .caja--tur { grid-column: span 2; }
   }
 </style>

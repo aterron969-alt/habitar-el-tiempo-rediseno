@@ -27,11 +27,10 @@ const pie = [t.cargo, t.empresa].filter(Boolean).join(' · ');
     padding: var(--s-7) var(--s-5) var(--s-5);
     border-radius: var(--r-lg);
     background: var(--blanco);
-    box-shadow: var(--sombra-1);
-    border: 1px solid var(--linea);
+    box-shadow: var(--sombra-caja);
     transition: transform var(--t-media) var(--ease-suave), box-shadow var(--t-media) var(--ease-suave);
   }
-  .testimonio:hover { transform: translateY(-3px); box-shadow: var(--sombra-2); }
+  .testimonio:hover { transform: translateY(-4px); }
   .testimonio-texto { flex: 1; position: relative; }
   .testimonio-texto::before {
     content: '“';

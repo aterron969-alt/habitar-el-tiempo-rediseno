@@ -10,7 +10,7 @@
   --turquesa-texto: #007c86;    /* texto y enlaces turquesa sobre blanco (4,97:1) */
   --turquesa-velo: #e3f6f8;     /* fondos muy suaves de acento */
   --tinta: #1d1d1f;
-  --gris-texto: #6e6e73;        /* 4,66:1 sobre niebla */
+  --gris-texto: #5d5d63;        /* ≥ 5:1 sobre niebla y sobre cielo */
   --niebla: #f5f5f7;
   --blanco: #ffffff;
   --cielo: #e6f2fa;             /* nubes de Budy */
@@ -53,11 +53,19 @@
   /* Formas */
   --r-sm: 10px;
   --r-md: 16px;
-  --r-lg: 24px;
+  --r-lg: 32px;
+  --r-xl: 40px;
   --r-pill: 999px;
   --sombra-1: 0 1px 2px rgb(29 29 31 / 0.04), 0 4px 16px rgb(29 29 31 / 0.05);
   --sombra-2: 0 2px 6px rgb(29 29 31 / 0.04), 0 18px 48px rgb(29 29 31 / 0.08);
   --sombra-turquesa: 0 10px 30px rgb(0 173 187 / 0.25);
+  --sombra-caja: 0 2px 6px rgb(0 60 90 / 0.04), 0 24px 50px rgb(0 60 90 / 0.07);
+
+  /* Fondo turquesa de cabeceras (propuesta B). Arriba, donde va el texto blanco,
+     el degradado es más oscuro para que el contraste pase AA (≥ 4,5:1). */
+  --fondo-turquesa:
+    radial-gradient(80% 60% at 50% 100%, #36c4cf 0%, rgb(0 173 187 / 0.9) 40%, rgb(0 173 187 / 0) 78%),
+    linear-gradient(180deg, #006d76 0%, #007882 40%, #008f9a 100%);
 
   /* Movimiento: todo como una respiración */
   --ease-suave: cubic-bezier(0.22, 0.61, 0.36, 1);   /* ~ power2.out */
@@ -124,7 +132,15 @@ ul[role='list'], ol[role='list'] { list-style: none; padding: 0; }
 .container { width: 100%; max-width: calc(var(--ancho) + var(--gutter) * 2); margin-inline: auto; padding-inline: var(--gutter); }
 .seccion { padding-block: var(--seccion); }
 .seccion--niebla { background: var(--niebla); }
-.seccion--cielo { background: linear-gradient(180deg, var(--blanco) 0%, var(--cielo) 100%); }
+.seccion--cielo { background: var(--cielo); }
+.seccion--redonda { border-radius: var(--r-xl) var(--r-xl) 0 0; }
+
+/* Todas las páginas empiezan con una cabecera de color: se mete debajo de la
+   barra de navegación, que al principio es transparente. */
+main > :first-child { margin-top: calc(-1 * var(--cabecera)); }
+
+/* Ola de transición al final de las cabeceras turquesa */
+.ola { position: absolute; left: 0; right: 0; bottom: -1px; width: 100%; height: clamp(36px, 5vw, 70px); pointer-events: none; }
 
 .saltar {
   position: fixed; top: 12px; left: 12px; z-index: 200;
@@ -141,12 +157,13 @@ ul[role='list'], ol[role='list'] { list-style: none; padding: 0; }
 .antetitulo {
   display: block;
   font-size: var(--fs-sm);
-  font-weight: 600;
-  color: var(--gris-texto);
-  letter-spacing: 0.02em;
+  font-weight: 800;
+  color: var(--turquesa-texto);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
   margin-bottom: var(--s-2);
 }
-.titulo-seccion h2, .h2 { font-size: var(--fs-xl); font-weight: 700; }
+.titulo-seccion h2, .h2 { font-size: clamp(2.2rem, 1.5rem + 3vw, 4rem); font-weight: 800; letter-spacing: -0.03em; }
 .titulo-seccion--izq { text-align: left; margin-bottom: var(--s-6); }
 .lead { font-size: var(--fs-md); line-height: 1.55; color: var(--gris-texto); }
 
@@ -182,6 +199,10 @@ ul[role='list'], ol[role='list'] { list-style: none; padding: 0; }
   border-color: color-mix(in srgb, var(--turquesa) 55%, white);
 }
 .btn--suave:hover { --btn-bg: var(--turquesa-velo); border-color: var(--turquesa); transform: translateY(-2px); }
+.btn--blanco { --btn-bg: var(--blanco); --btn-fg: #00626a; box-shadow: 0 10px 30px rgb(0 60 70 / 0.2); }
+.btn--blanco:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgb(0 60 70 / 0.28); }
+.btn--linea-blanca { --btn-bg: transparent; --btn-fg: var(--blanco); border-color: rgb(255 255 255 / 0.7); }
+.btn--linea-blanca:hover { --btn-bg: rgb(255 255 255 / 0.14); transform: translateY(-2px); }
 .btn--grande { min-height: 54px; padding-inline: 1.875rem; font-size: var(--fs-md); }
 .btn--peq { min-height: 42px; padding: 0.5rem 1.125rem; font-size: var(--fs-sm); }
 

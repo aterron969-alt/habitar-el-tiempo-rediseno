@@ -11,19 +11,17 @@ const frase = beneficios.map((b) => b.toLocaleLowerCase('es-ES')).join(', ');
 const nube = 'M20 44 C7 44 4 29 16 26 C14 13 31 8 39 17 C44 4 67 4 71 18 C80 10 97 15 95 28 C108 28 110 44 96 44 Z';
 ---
 <section class="hero" id="inicio" aria-labelledby="hero-titulo">
-  <div class="container hero-rejilla">
-    <div class="hero-texto">
-      <p class="hero-ante">Escuela de Mindfulness</p>
-      <h1 id="hero-titulo" class="hero-titulo">Aprende a vivir con…</h1>
-      <p class="sr-only">{frase}.</p>
-      <p class="rotador" aria-hidden="true" data-rotador>
-        {beneficios.map((b, i) => <span class:list={['rotador-palabra', { 'es-activa': i === 0 }]}>{b}</span>)}
-      </p>
-      <p class="hero-sub">Sesiones de mindfulness en directo por videoconferencia, con acompañamiento personal.</p>
-      <div class="hero-acciones">
-        <a href={url('consultame/#solicita')} class="btn btn--primario btn--grande" data-abrir-sesiones>Empieza ahora</a>
-        <a href="#como-es" class="btn btn--suave btn--grande">+ Info</a>
-      </div>
+  <div class="container hero-cuerpo">
+    <p class="hero-ante">Escuela de Mindfulness</p>
+    <h1 id="hero-titulo" class="hero-titulo">Aprende a vivir con…</h1>
+    <p class="sr-only">{frase}.</p>
+    <p class="rotador" aria-hidden="true" data-rotador>
+      {beneficios.map((b, i) => <span class:list={['rotador-palabra', { 'es-activa': i === 0 }]}>{b}</span>)}
+    </p>
+    <p class="hero-sub">Sesiones de mindfulness en directo por videoconferencia, con acompañamiento personal.</p>
+    <div class="hero-acciones">
+      <a href={url('consultame/#solicita')} class="btn btn--blanco btn--grande" data-abrir-sesiones>Empieza ahora</a>
+      <a href="#como-es" class="btn btn--linea-blanca btn--grande">+ Info</a>
     </div>
 
     <div class="hero-visual" data-respira>
@@ -31,23 +29,15 @@ const nube = 'M20 44 C7 44 4 29 16 26 C14 13 31 8 39 17 C44 4 67 4 71 18 C80 10 
         <path class="respira-halo" d={circulo} data-halo />
         <path class="respira-blob" d={circulo} data-blob />
       </svg>
-
-      <div class="nubes" aria-hidden="true">
-        <svg class="nube nube--1" viewBox="0 0 112 50" data-paralaje="0.25"><path pathLength="1" d={nube} /></svg>
-        <svg class="nube nube--2" viewBox="0 0 112 50" data-paralaje="0.4"><path pathLength="1" d={nube} /></svg>
-        <svg class="nube nube--3" viewBox="0 0 112 50" data-paralaje="0.15"><path pathLength="1" d={nube} /></svg>
-      </div>
-
       <Image
         src={budyCalma}
         alt="Budy, la mascota de la escuela, medita sereno entre árboles y se imagina meditando"
         widths={[280, 400, 560, 800]}
-        sizes="(min-width: 1024px) 400px, (min-width: 640px) 360px, 68vw"
+        sizes="(min-width: 1024px) 340px, (min-width: 640px) 300px, 58vw"
         loading="eager"
         fetchpriority="high"
         class="budy"
       />
-
       <p class="respira-guia" aria-hidden="true" data-guia>
         <span data-fase="inspira">Inspira</span><span data-fase="espira">Espira</span>
       </p>
@@ -58,122 +48,63 @@ const nube = 'M20 44 C7 44 4 29 16 26 C14 13 31 8 39 17 C44 4 67 4 71 18 C80 10 
       </button>
     </div>
   </div>
+
+  <div class="nubes" aria-hidden="true">
+    <svg class="nube nube--1" viewBox="0 0 112 50" data-paralaje="0.25"><path pathLength="1" d={nube} /></svg>
+    <svg class="nube nube--2" viewBox="0 0 112 50" data-paralaje="0.4"><path pathLength="1" d={nube} /></svg>
+    <svg class="nube nube--3" viewBox="0 0 112 50" data-paralaje="0.15"><path pathLength="1" d={nube} /></svg>
+  </div>
+  <svg class="ola" viewBox="0 0 1440 70" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path d="M0 40 C 240 0 480 0 720 30 S 1200 70 1440 30 V70 H0Z" fill="var(--cielo)" /></svg>
 </section>
 
 <style>
   .hero {
     position: relative;
-    padding-block: var(--s-5) var(--s-8);
-    background:
-      radial-gradient(60% 55% at 78% 45%, var(--cielo) 0%, rgb(230 242 250 / 0) 70%),
-      var(--blanco);
+    /* Abajo deja sitio a la ola para que no tape la base de Budy */
+    padding: calc(var(--cabecera) + var(--s-5)) 0 calc(clamp(36px, 5vw, 70px) - 14px);
+    background: var(--fondo-turquesa);
+    color: var(--blanco);
     overflow: clip;
   }
-  .hero-rejilla {
-    display: grid;
-    gap: var(--s-5);
-    align-items: center;
-  }
-  .hero-texto { order: 2; text-align: center; }
-  .hero-visual { order: 1; }
-
+  .hero-cuerpo { position: relative; z-index: 2; display: grid; justify-items: center; text-align: center; }
   .hero-ante {
-    font-size: var(--fs-sm);
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--gris-texto);
+    font-size: var(--fs-sm); font-weight: 800; letter-spacing: 0.16em; text-transform: uppercase;
+    color: rgb(255 255 255 / 0.9);
     margin-bottom: var(--s-3);
   }
-  .hero-titulo {
-    font-size: var(--fs-hero);
-    font-weight: 600;
-    letter-spacing: -0.025em;
-    line-height: 1.05;
-  }
-  /* Todas las palabras ocupan la misma celda: el bloque mide lo que la más larga
-     y no hay saltos de maquetación al cambiar. */
+  .hero-titulo { font-size: clamp(2.1rem, 1.3rem + 3.6vw, 4.4rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; }
+  /* Todas las palabras ocupan la misma celda: el bloque mide lo que la más larga. */
   .rotador {
-    display: grid;
-    margin-top: var(--s-2);
-    font-size: clamp(1.875rem, 1.05rem + 3.2vw, 3.6rem);
-    font-weight: 800;
-    line-height: 1.08;
-    letter-spacing: -0.01em;
-    color: var(--turquesa-texto);
+    display: grid; justify-items: center;
+    margin-top: var(--s-1);
+    font-size: clamp(2.5rem, 1.4rem + 4.6vw, 5.6rem);
+    font-weight: 800; line-height: 1.04; letter-spacing: -0.025em;
+    text-shadow: 0 4px 30px rgb(0 60 70 / 0.25);
   }
   .rotador-palabra { grid-area: 1 / 1; visibility: hidden; }
   .rotador-palabra.es-activa { visibility: visible; }
-  .rotador-palabra :global(.letra) { display: inline-block; white-space: pre; will-change: transform, opacity, filter; }
+  .rotador-palabra :global(.palabra) { display: inline-block; white-space: nowrap; }
+  .rotador-palabra :global(.letra) { display: inline-block; will-change: transform, opacity, filter; }
+  .hero-sub { margin-top: var(--s-4); max-width: 36ch; font-size: var(--fs-md); line-height: 1.5; color: var(--blanco); }
+  .hero-acciones { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s-3); margin-top: var(--s-6); }
 
-  .hero-sub {
-    margin: var(--s-5) auto 0;
-    max-width: 34ch;
-    font-size: var(--fs-md);
-    line-height: 1.5;
-    color: var(--gris-texto);
-  }
-  .hero-acciones {
-    display: flex; flex-wrap: wrap; gap: var(--s-3);
-    justify-content: center;
-    margin-top: var(--s-6);
-  }
-
-  /* --- Visual: Budy y el círculo que respira --- */
-  .hero-visual {
-    position: relative;
-    width: min(100%, 320px);
-    margin: 0 auto 3rem;
-    aspect-ratio: 1 / 1.04;
-  }
-  .respira-svg {
-    position: absolute;
-    inset: 4% 0 auto;
-    width: 100%;
-    height: auto;
-    overflow: visible;
-  }
-  .respira-blob { fill: var(--turquesa); }
-  .respira-halo { fill: var(--turquesa); opacity: 0.12; transform-origin: 200px 200px; transform: scale(1.12); }
-
+  /* --- Escena: Budy y los círculos que respiran --- */
+  .hero-visual { position: relative; width: min(88vw, 520px); aspect-ratio: 1 / 0.86; margin-top: var(--s-6); }
+  .respira-svg { position: absolute; left: 50%; bottom: -22%; width: 112%; height: auto; translate: -50% 0; overflow: visible; }
+  .respira-blob { fill: rgb(255 255 255 / 0.16); }
+  .respira-halo { fill: rgb(255 255 255 / 0.1); transform-origin: 200px 200px; transform: scale(1.12); }
   :global(.budy) {
-    position: absolute;
-    left: 50%;
-    bottom: 0;
-    width: 74%;
+    position: absolute; left: 50%; bottom: 0;
+    width: 58%;
     transform: translateX(-50%);
-    filter: drop-shadow(0 18px 24px rgb(0 80 90 / 0.18));
+    filter: drop-shadow(0 30px 40px rgb(0 50 60 / 0.35));
   }
-
-  .nubes { position: absolute; inset: 0; pointer-events: none; }
-  .nube { position: absolute; width: 22%; overflow: visible; }
-  .nube path {
-    fill: var(--blanco);
-    stroke: var(--cielo-trazo);
-    stroke-width: 2.2;
-    stroke-linejoin: round;
-    stroke-dasharray: 1;
-    stroke-dashoffset: 0;
-  }
-  .nube--1 { top: 0; left: -2%; width: 24%; }
-  .nube--2 { top: 12%; right: -2%; width: 19%; }
-  .nube--3 { top: 48%; left: -3%; width: 15%; }
-  @media (min-width: 1024px) {
-    .nube--1 { top: 2%; left: -4%; width: 26%; }
-    .nube--2 { top: 10%; right: -8%; width: 21%; }
-    .nube--3 { top: 46%; left: -14%; width: 17%; }
-  }
-
   .respira-guia {
-    position: absolute;
-    left: 0; right: 0; bottom: -2.25rem;
-    display: grid;
-    justify-items: center;
-    font-size: var(--fs-xs);
-    font-weight: 700;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--gris-texto);
+    position: absolute; left: 50%; top: 4%; translate: -50% 0;
+    display: grid; justify-items: center;
+    padding: 6px 16px; border-radius: var(--r-pill);
+    background: rgb(0 60 70 / 0.3);
+    font-size: var(--fs-xs); font-weight: 800; letter-spacing: 0.24em; text-transform: uppercase;
     visibility: hidden;
   }
   .respira-guia span { grid-area: 1 / 1; opacity: 0; transition: opacity 900ms var(--ease-respira); }
@@ -181,48 +112,48 @@ const nube = 'M20 44 C7 44 4 29 16 26 C14 13 31 8 39 17 C44 4 67 4 71 18 C80 10 
   .respira-guia span.es-activa { opacity: 1; }
 
   .pausa {
-    position: absolute;
-    right: 0; bottom: -2.6rem;
-    display: none;
-    place-items: center;
-    width: 40px; height: 40px;
+    position: absolute; right: 0; top: 2%;
+    display: none; place-items: center;
+    width: 44px; height: 44px;
     border-radius: 50%;
-    border: 1px solid var(--linea);
-    background: var(--blanco);
-    color: var(--gris-texto);
-    transition: color var(--t-rapida) var(--ease-suave), border-color var(--t-rapida) var(--ease-suave);
+    border: 1px solid rgb(255 255 255 / 0.45);
+    background: rgb(0 60 70 / 0.25);
+    color: var(--blanco);
+    transition: background-color var(--t-rapida) var(--ease-suave);
   }
-  .pausa:hover { color: var(--tinta); border-color: #c9c9d1; }
+  .pausa:hover { background: rgb(0 60 70 / 0.45); }
+  .pausa:focus-visible { outline-color: var(--blanco); }
   .pausa svg { fill: currentColor; }
   :global(html.js) .hero-visual.esta-viva .pausa { display: grid; }
   .pausa-icono-play, .pausa[aria-pressed='true'] .pausa-icono-pausa { display: none; }
   .pausa[aria-pressed='true'] .pausa-icono-play { display: block; }
+  .hero :focus-visible { outline-color: var(--blanco); }
 
-  /* Entrada de las nubes: se dibuja el contorno y luego derivan despacio */
-  :global(html.js) .hero-visual.esta-viva .nube path { animation: nube-trazo 1.6s var(--ease-respira) both; }
-  :global(html.js) .hero-visual.esta-viva .nube--2 path { animation-delay: 0.35s; }
-  :global(html.js) .hero-visual.esta-viva .nube--3 path { animation-delay: 0.7s; }
-  :global(html.js) .hero-visual.esta-viva .nube { animation: nube-deriva 18s var(--ease-respira) 1.6s infinite alternate; }
-  :global(html.js) .hero-visual.esta-viva .nube--2 { animation-duration: 23s; animation-direction: alternate-reverse; }
-  :global(html.js) .hero-visual.esta-viva .nube--3 { animation-duration: 20s; }
-  :global(html.js) .hero-visual.esta-pausada .nube { animation-play-state: paused; }
-  @keyframes nube-trazo {
-    0% { stroke-dashoffset: 1; fill-opacity: 0; }
-    70% { fill-opacity: 0; }
-    100% { stroke-dashoffset: 0; fill-opacity: 1; }
+  /* Nubes blancas que se dibujan y derivan despacio */
+  .nubes { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+  .nube { position: absolute; overflow: visible; filter: drop-shadow(0 8px 14px rgb(0 60 70 / 0.18)); }
+  .nube path { fill: var(--blanco); stroke: var(--blanco); stroke-width: 2.2; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 0; }
+  .nube--1 { top: 30%; left: 4%; width: 120px; }
+  .nube--2 { top: 16%; right: 6%; width: 92px; }
+  .nube--3 { top: 64%; right: 8%; width: 70px; }
+  /* En móvil no caben sin tapar texto o botones */
+  @media (max-width: 760px) {
+    .nubes { display: none; }
+    .respira-guia { left: 0; translate: 0 0; }
   }
-  @keyframes nube-deriva { from { translate: -10px 0; } to { translate: 14px 0; } }
+  :global(html.js) .hero.esta-viva .nube path { animation: nube-trazo 1.6s var(--ease-respira) both; }
+  :global(html.js) .hero.esta-viva .nube--2 path { animation-delay: 0.35s; }
+  :global(html.js) .hero.esta-viva .nube--3 path { animation-delay: 0.7s; }
+  :global(html.js) .hero.esta-viva .nube { animation: nube-deriva 22s var(--ease-respira) 1.6s infinite alternate; }
+  :global(html.js) .hero.esta-viva .nube--2 { animation-duration: 28s; animation-direction: alternate-reverse; }
+  :global(html.js) .hero.esta-viva .nube--3 { animation-duration: 25s; }
+  :global(html.js) .hero.esta-pausada .nube { animation-play-state: paused; }
+  @keyframes nube-trazo { 0% { stroke-dashoffset: 1; fill-opacity: 0; } 70% { fill-opacity: 0; } 100% { stroke-dashoffset: 0; fill-opacity: 1; } }
+  @keyframes nube-deriva { from { translate: -14px 0; } to { translate: 18px 0; } }
 
-  @media (min-width: 640px) {
-    .hero-visual { width: min(100%, 420px); }
-  }
   @media (min-width: 1024px) {
-    .hero { padding-block: var(--s-7) var(--s-9); min-height: min(820px, calc(100vh - var(--cabecera))); display: grid; align-items: center; }
-    .hero-rejilla { grid-template-columns: 1.08fr 0.92fr; gap: var(--s-7); }
-    .hero-texto { order: 1; text-align: left; }
-    .hero-visual { order: 2; width: min(100%, 520px); margin-bottom: 0; }
-    .hero-sub { margin-inline: 0; }
-    .hero-acciones { justify-content: flex-start; }
+    .hero { padding-top: calc(var(--cabecera) + var(--s-6)); }
+    .hero-visual { width: 560px; }
   }
 </style>
 
@@ -240,6 +171,7 @@ const nube = 'M20 44 C7 44 4 29 16 26 C14 13 31 8 39 17 C44 4 67 4 71 18 C80 10 
     const pausa = visual.querySelector<HTMLButtonElement>('[data-pausa]')!;
     const pausaTexto = visual.querySelector<HTMLElement>('[data-pausa-texto]')!;
     visual.classList.add('esta-viva');
+    visual.closest('.hero')?.classList.add('esta-viva');
 
     // ---------- Círculo que respira ----------
     // Blob de 8 puntos con ruido suave (deformación ligera) y una escala
@@ -297,20 +229,28 @@ const nube = 'M20 44 C7 44 4 29 16 26 C14 13 31 8 39 17 C44 4 67 4 71 18 C80 10 
     palabras.forEach((p) => {
       const texto = p.textContent || '';
       p.textContent = '';
-      [...texto].forEach((ch) => {
-        const s = document.createElement('span');
-        s.className = 'letra';
-        s.textContent = ch;
-        p.appendChild(s);
+      // Letras agrupadas por palabra: la línea solo puede partirse entre palabras,
+      // igual que antes de dividir, así el bloque no cambia de altura.
+      texto.split(' ').forEach((pal, n) => {
+        if (n) p.appendChild(document.createTextNode(' '));
+        const w = document.createElement('span');
+        w.className = 'palabra';
+        [...pal].forEach((ch) => {
+          const s = document.createElement('span');
+          s.className = 'letra';
+          s.textContent = ch;
+          w.appendChild(s);
+        });
+        p.appendChild(w);
       });
     });
     const tl = gsap.timeline({ repeat: -1, delay: 2.5 });
     palabras.forEach((_, n) => {
       const sale = palabras[n], entra = palabras[(n + 1) % palabras.length];
-      tl.to(sale.children, { autoAlpha: 0, y: -8, filter: 'blur(6px)', duration: 0.45, ease: 'power2.in', stagger: 0.015 })
+      tl.to(sale.querySelectorAll('.letra'), { autoAlpha: 0, y: -8, filter: 'blur(6px)', duration: 0.45, ease: 'power2.in', stagger: 0.015 })
         .set(sale, { visibility: 'hidden' })
         .set(entra, { visibility: 'visible' })
-        .fromTo(entra.children,
+        .fromTo(entra.querySelectorAll('.letra'),
           { autoAlpha: 0, y: 10, filter: 'blur(8px)' },
           { autoAlpha: 1, y: 0, filter: 'blur(0px)', duration: 0.7, ease: 'power2.out', stagger: 0.025 })
         .to({}, { duration: 1.35 });
@@ -323,6 +263,7 @@ const nube = 'M20 44 C7 44 4 29 16 26 C14 13 31 8 39 17 C44 4 67 4 71 18 C80 10 
       pausa.setAttribute('aria-pressed', String(pausado));
       pausaTexto.textContent = pausado ? 'Reanudar la animación' : 'Pausar la animación';
       visual.classList.toggle('esta-pausada', pausado);
+      visual.closest('.hero')?.classList.toggle('esta-pausada', pausado);
       pausado ? tl.pause() : tl.resume();
     });
   }

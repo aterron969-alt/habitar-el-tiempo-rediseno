@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import Planta from '../components/Planta.astro';
 import Icono from '../components/Icono.astro';
+import CabezaPagina from '../components/CabezaPagina.astro';
 import banner from '../assets/orig/mecenazgo-mindfulness.webp';
 import patricia from '../assets/orig/Patricia-directora-HT.webp';
 import { citaMecenazgo, invitacion, cuotas, notaSuscripcion, puntual } from '../data/mecenazgo';
@@ -11,14 +12,15 @@ import { citaMecenazgo, invitacion, cuotas, notaSuscripcion, puntual } from '../
   titulo="Mecenazgo · Habitar el Tiempo"
   descripcion="Hazte mecenas de la Escuela de Mindfulness Habitar el Tiempo y ayuda a que las sesiones sigan siendo accesibles para todas las personas, con independencia de sus recursos."
 >
-  <section class="cabeza-mec">
-    <div class="container">
-      <h1 class="sr-only">Mecenazgo</h1>
-      <Image src={banner} alt="Mindfulness: un bosque ilustrado con un árbol frondoso" widths={[640, 1080]} sizes="(min-width: 1200px) 1200px, 100vw" loading="eager" fetchpriority="high" class="banner" />
-    </div>
-  </section>
+  <CabezaPagina centrada>
+    <h1>Mecenazgo</h1>
+    <p>{invitacion}</p>
+  </CabezaPagina>
 
   <section class="seccion carta" aria-label="Carta de Patricia Villa">
+    <div class="container">
+      <Image src={banner} alt="Mindfulness: un bosque ilustrado con un árbol frondoso" widths={[640, 1080]} sizes="(min-width: 1200px) 1080px, 92vw" loading="eager" class="banner" />
+    </div>
     <div class="container carta-caja" data-revelar>
       <Image src={patricia} alt="Patricia Villa, directora de la escuela" width={120} densities={[1, 2]} class="carta-foto" />
       <div>
@@ -28,9 +30,8 @@ import { citaMecenazgo, invitacion, cuotas, notaSuscripcion, puntual } from '../
     </div>
   </section>
 
-  <section class="seccion seccion--niebla" aria-labelledby="elige-titulo">
+  <section class="seccion seccion--cielo seccion--redonda" aria-labelledby="elige-titulo">
     <div class="container">
-      <p class="lead invitacion" data-revelar>{invitacion}</p>
       <div class="titulo-seccion" data-revelar>
         <h2 id="elige-titulo">Elige tu mecenazgo*</h2>
       </div>
@@ -61,8 +62,8 @@ import { citaMecenazgo, invitacion, cuotas, notaSuscripcion, puntual } from '../
 </Base>
 
 <style>
-  .cabeza-mec { padding-top: var(--s-5); }
-  :global(.banner) { width: 100%; height: auto; border-radius: var(--r-lg); aspect-ratio: 4 / 1; object-fit: cover; }
+  .carta { padding-top: var(--s-6); }
+  :global(.banner) { width: 100%; max-width: 1080px; margin: 0 auto var(--s-8); height: auto; border-radius: var(--r-lg); aspect-ratio: 4 / 1; object-fit: cover; box-shadow: var(--sombra-caja); }
 
   .carta-caja { display: grid; gap: var(--s-5); max-width: 860px; justify-items: center; text-align: center; }
   :global(.carta-foto) { width: 112px; height: 112px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 6px var(--turquesa-velo); }
@@ -73,7 +74,6 @@ import { citaMecenazgo, invitacion, cuotas, notaSuscripcion, puntual } from '../
     .carta-caja { grid-template-columns: auto 1fr; justify-items: start; text-align: left; gap: var(--s-7); align-items: start; }
   }
 
-  .invitacion { text-align: center; max-width: 60ch; margin: 0 auto var(--s-7); color: var(--tinta); }
   .cuotas { display: grid; gap: var(--s-5); }
   @media (min-width: 900px) { .cuotas { grid-template-columns: repeat(3, 1fr); } }
   .cuota {
@@ -81,11 +81,10 @@ import { citaMecenazgo, invitacion, cuotas, notaSuscripcion, puntual } from '../
     padding: var(--s-6) var(--s-5);
     border-radius: var(--r-lg);
     background: var(--blanco);
-    border: 1px solid var(--linea);
-    box-shadow: var(--sombra-1);
+    box-shadow: var(--sombra-caja);
     transition: transform var(--t-media) var(--ease-suave), box-shadow var(--t-media) var(--ease-suave);
   }
-  .cuota:hover, .cuota:focus-within { transform: translateY(-4px); box-shadow: var(--sombra-2); }
+  .cuota:hover, .cuota:focus-within { transform: translateY(-6px); }
   .cuota:hover :global(.planta g), .cuota:focus-within :global(.planta g) { transform: scale(1.07); }
   .cuota-nombre { margin-top: var(--s-3); font-size: var(--fs-lg); font-weight: 800; letter-spacing: 0.06em; }
   .cuota-precio { font-size: var(--fs-xl); font-weight: 800; color: var(--turquesa-texto); line-height: 1.2; }

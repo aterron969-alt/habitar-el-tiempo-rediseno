@@ -4,6 +4,10 @@ import '@fontsource/nunito/latin-600.css';
 import '@fontsource/nunito/latin-700.css';
 import '@fontsource/nunito/latin-800.css';
 import '../styles/global.css';
+// Precarga de los pesos que se ven en el primer pantallazo: evita que el texto
+// cambie de tamaño al llegar la fuente y empuje lo que hay debajo (CLS).
+import nunito800 from '@fontsource/nunito/files/nunito-latin-800-normal.woff2?url';
+import nunito400 from '@fontsource/nunito/files/nunito-latin-400-normal.woff2?url';
 import Cabecera from '../components/Cabecera.astro';
 import Pie from '../components/Pie.astro';
 import DialogoSesiones from '../components/DialogoSesiones.astro';
@@ -61,6 +65,8 @@ const datos = {
     <!-- Demo pública: que Google no la confunda con la web oficial -->
     <meta name="robots" content="noindex, nofollow" />
     <link rel="canonical" href={canonica} />
+    <link rel="preload" href={nunito800} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={nunito400} as="font" type="font/woff2" crossorigin />
     <meta name="theme-color" content="#ffffff" />
 
     <link rel="icon" type="image/png" sizes="32x32" href={url('favicon-32.png')} />

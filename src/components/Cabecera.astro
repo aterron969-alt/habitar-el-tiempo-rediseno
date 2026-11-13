@@ -12,7 +12,7 @@ const enlace = (href: string, externo?: boolean) =>
 const actual = Astro.url.pathname;
 const esActual = (href: string) => !href.startsWith('#') && !href.startsWith('http') && actual === url(href);
 ---
-<header class="cabecera" data-cabecera>
+<header class="cabecera sobre-color" data-cabecera>
   <div class="container cabecera-fila">
     <a class="marca" href={url()} aria-label="Habitar el Tiempo, ir al inicio">
       <Logo tam={52} animar clase="marca-logo" />
@@ -79,6 +79,23 @@ const esActual = (href: string) => !href.startsWith('#') && !href.startsWith('ht
     backdrop-filter: saturate(1.6) blur(14px);
   }
   .cabecera.es-compacta { border-bottom-color: var(--linea); box-shadow: 0 6px 24px rgb(29 29 31 / 0.04); }
+
+  /* Arriba del todo la barra flota sobre la cabecera turquesa de cada página:
+     fondo transparente, textos en blanco y menú en cápsula. Al bajar o al abrir
+     el menú móvil vuelve a ser blanca. */
+  .cabecera::before { transition: opacity var(--t-media) var(--ease-suave); }
+  .cabecera.sobre-color::before { opacity: 0; }
+  .cabecera.sobre-color .marca { color: var(--blanco); }
+  .cabecera.sobre-color .marca-pre { color: rgb(255 255 255 / 0.85); }
+  .cabecera.sobre-color .marca :global(.logo) { border-radius: 50%; background: var(--blanco); box-shadow: 0 0 0 3px rgb(255 255 255 / 0.35); }
+  .cabecera.sobre-color .nav-lista { background: rgb(255 255 255 / 0.14); }
+  .cabecera.sobre-color .nav-lista a { color: var(--blanco); }
+  .cabecera.sobre-color .nav-lista a:hover { background: rgb(255 255 255 / 0.18); }
+  .cabecera.sobre-color .nav-lista a[aria-current='page'] { background: var(--blanco); color: #00626a; }
+  .cabecera.sobre-color .cabecera-acciones .btn { --btn-bg: var(--blanco); --btn-fg: #00626a; }
+  .cabecera.sobre-color .menu-boton { background: rgb(255 255 255 / 0.18); }
+  .cabecera.sobre-color .menu-icono span { background: var(--blanco); }
+  .cabecera.sobre-color :focus-visible { outline-color: var(--blanco); }
   .cabecera-fila {
     display: flex;
     align-items: center;
@@ -101,7 +118,7 @@ const esActual = (href: string) => !href.startsWith('#') && !href.startsWith('ht
   .marca-nombre { font-size: 1.0625rem; font-weight: 800; letter-spacing: -0.01em; }
 
   .nav { display: none; }
-  .nav-lista { display: flex; gap: var(--s-1); }
+  .nav-lista { display: flex; gap: 2px; padding: 5px; border-radius: var(--r-pill); transition: background-color var(--t-media) var(--ease-suave); }
   .nav-lista a {
     display: block;
     padding: 0.5rem 0.75rem;
@@ -190,13 +207,21 @@ const esActual = (href: string) => !href.startsWith('#') && !href.startsWith('ht
   const sensor = document.createElement('div');
   sensor.style.cssText = 'position:absolute;top:0;left:0;width:1px;height:40px;pointer-events:none';
   document.body.prepend(sensor);
-  new IntersectionObserver(([e]) => cab.classList.toggle('es-compacta', !e.isIntersecting)).observe(sensor);
+  let arriba = true;
+  const pintaColor = () => cab.classList.toggle('sobre-color', arriba && !cab.classList.contains('menu-abierto'));
+  new IntersectionObserver(([e]) => {
+    arriba = e.isIntersecting;
+    cab.classList.toggle('es-compacta', !arriba);
+    pintaColor();
+  }).observe(sensor);
 
   // Menú móvil
   let abierto = false;
   const enfocables = () => [boton, ...panel.querySelectorAll<HTMLElement>('a, button')];
   function abrir() {
     abierto = true;
+    cab.classList.add('menu-abierto');
+    pintaColor();
     panel.hidden = false;
     requestAnimationFrame(() => requestAnimationFrame(() => panel.classList.add('esta-abierto')));
     boton.setAttribute('aria-expanded', 'true');
@@ -208,6 +233,8 @@ const esActual = (href: string) => !href.startsWith('#') && !href.startsWith('ht
   function cerrar(devolverFoco = true) {
     if (!abierto) return;
     abierto = false;
+    cab.classList.remove('menu-abierto');
+    pintaColor();
     panel.classList.remove('esta-abierto');
     boton.setAttribute('aria-expanded', 'false');
     etiqueta.textContent = 'Abrir menú';

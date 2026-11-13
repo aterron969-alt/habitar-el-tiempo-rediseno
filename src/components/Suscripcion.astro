@@ -8,49 +8,51 @@ import { suscripcion } from '../data/portada';
 import { externos } from '../data/sitio';
 import '../styles/formularios.css';
 ---
-<section class="seccion seccion--cielo suscripcion" id="novedades" aria-labelledby="sus-titulo">
-  <div class="container">
-    <div class="sus-caja" data-revelar>
-      <div class="sus-visual">
-        <Image src={budyMail} alt="Budy medita sobre una arroba entre nubes" widths={[260, 400, 520]} sizes="(min-width: 900px) 320px, 220px" class="sus-budy" />
-      </div>
-      <div class="sus-form">
-        <h2 id="sus-titulo" class="h2">{suscripcion.titulo}</h2>
-        <p class="lead">{suscripcion.sub}</p>
-        <!-- PENDIENTE: conectar con el servicio de newsletter de la escuela
-             (action="..." method="POST" y quitar data-demo). -->
-        <form class="formulario" novalidate data-demo>
-          <div class="formulario-fila formulario-fila--2">
-            <Campo id="sus-nombre" nombre="nombre" etiqueta="Nombre" requerido autocomplete="given-name" vacio="Escribe tu nombre." />
-            <Campo id="sus-email" nombre="email" etiqueta="Correo electrónico" tipo="email" requerido autocomplete="email" vacio="Escribe tu correo electrónico." />
-          </div>
-          <Campo id="sus-acepto" nombre="consentimiento" tipo="checkbox" requerido vacio="Necesitamos que aceptes la política de privacidad.">
-            He leído y acepto la <a href={externos.privacidad} rel="noopener" target="_blank">política de privacidad</a>
-          </Campo>
-          <button type="submit" class="btn btn--primario btn--grande">Suscribirme ›</button>
-          <AvisoDemo />
-        </form>
-      </div>
+<section class="seccion seccion--redonda suscripcion" id="novedades" aria-labelledby="sus-titulo">
+  <div class="container sus-rejilla">
+    <div class="sus-intro" data-revelar>
+      <Image src={budyMail} alt="Budy medita sobre una arroba entre nubes" widths={[260, 400, 520]} sizes="(min-width: 900px) 300px, 200px" class="sus-budy" />
+      <h2 id="sus-titulo" class="h2">{suscripcion.titulo}</h2>
+      <p class="lead">{suscripcion.sub}</p>
+    </div>
+    <div class="sus-caja" data-revelar="0.1">
+      <!-- PENDIENTE: conectar con el servicio de newsletter de la escuela
+           (action="..." method="POST" y quitar data-demo). -->
+      <form class="formulario" novalidate data-demo>
+        <Campo id="sus-nombre" nombre="nombre" etiqueta="Nombre" requerido autocomplete="given-name" vacio="Escribe tu nombre." />
+        <Campo id="sus-email" nombre="email" etiqueta="Correo electrónico" tipo="email" requerido autocomplete="email" vacio="Escribe tu correo electrónico." />
+        <Campo id="sus-acepto" nombre="consentimiento" tipo="checkbox" requerido vacio="Necesitamos que aceptes la política de privacidad.">
+          He leído y acepto la <a href={externos.privacidad} rel="noopener" target="_blank">política de privacidad</a>
+        </Campo>
+        <button type="submit" class="btn btn--primario btn--grande">Suscribirme ›</button>
+        <AvisoDemo />
+      </form>
     </div>
   </div>
 </section>
 
 <style>
+  /* Turquesa oscuro uniforme: el texto blanco normal necesita 4,5:1 en toda la franja */
+  .suscripcion { background: linear-gradient(180deg, #006d76, #007882); color: var(--blanco); }
+  .suscripcion :focus-visible { outline-color: var(--blanco); }
+  .sus-caja :focus-visible { outline-color: var(--turquesa-texto); }
+  .sus-rejilla { display: grid; gap: var(--s-6); align-items: center; }
+  .sus-intro { display: grid; justify-items: center; text-align: center; gap: var(--s-2); }
+  .sus-intro .lead { color: var(--blanco); }
+  :global(.sus-budy) { width: min(200px, 56vw); height: auto; margin-bottom: var(--s-3); filter: drop-shadow(0 20px 30px rgb(0 50 60 / 0.3)); }
   .sus-caja {
-    display: grid; gap: var(--s-5);
     padding: var(--s-6) var(--s-5);
     border-radius: var(--r-lg);
     background: var(--blanco);
-    box-shadow: var(--sombra-2);
-    max-width: 980px;
-    margin-inline: auto;
+    color: var(--tinta);
+    box-shadow: 0 30px 60px rgb(0 50 60 / 0.25);
+    width: 100%; max-width: 560px; justify-self: center;
   }
-  .sus-visual { display: grid; place-items: center; }
-  :global(.sus-budy) { width: min(220px, 60vw); height: auto; }
-  .sus-form .lead { margin: var(--s-2) 0 var(--s-5); }
-  .sus-form .btn { justify-self: start; }
+  .sus-caja .btn { justify-self: start; }
   @media (min-width: 900px) {
-    .sus-caja { grid-template-columns: 320px 1fr; gap: var(--s-7); padding: var(--s-7); align-items: center; }
-    :global(.sus-budy) { width: 300px; }
+    .sus-rejilla { grid-template-columns: 1fr 1fr; gap: var(--s-8); }
+    .sus-intro { justify-items: start; text-align: left; }
+    :global(.sus-budy) { width: 280px; }
+    .sus-caja { padding: var(--s-7); justify-self: end; }
   }
 </style>
