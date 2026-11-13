@@ -10,4 +10,5 @@ export default defineConfig({
   trailingSlash: 'always',
   build: { inlineStylesheets: 'always' },
   image: { responsiveStyles: false },
+  devToolbar: { enabled: false },
 });

@@ -1,0 +1,241 @@
+---
+// Portada · «Comparten Experiencias»: carrusel propio con scroll-snap.
+// Arrastre con ratón, flechas, puntos (el activo en --rosa), avance automático cada 7 s
+// que se pausa al pasar el ratón o al enfocar, botón de pausa (WCAG 2.2.2)
+// y sin avance automático con prefers-reduced-motion.
+import TarjetaTestimonio from './TarjetaTestimonio.astro';
+import Icono from './Icono.astro';
+import { testimoniosPortada } from '../data/testimonios';
+import { url } from '../lib/url';
+---
+<section class="seccion seccion--niebla experiencias" aria-labelledby="exp-titulo">
+  <div class="container">
+    <div class="titulo-seccion" data-revelar>
+      <span class="antetitulo">Comparten</span>
+      <h2 id="exp-titulo">Experiencias</h2>
+    </div>
+
+    <div class="carrusel" data-carrusel aria-roledescription="carrusel" role="region" aria-label="Experiencias del alumnado">
+      <ul role="list" class="carrusel-pista" data-pista tabindex="0" aria-label="Testimonios (desplázate con las flechas del teclado)">
+        {testimoniosPortada.map((t, i) => (
+          <li class="carrusel-item" aria-roledescription="diapositiva" aria-label={`${i + 1} de ${testimoniosPortada.length}`}>
+            <TarjetaTestimonio t={t} />
+          </li>
+        ))}
+      </ul>
+
+      <div class="carrusel-controles" data-controles hidden>
+        <button type="button" class="carrusel-boton" data-anterior aria-label="Testimonios anteriores">
+          <Icono nombre="flechaIzq" tam={22} />
+        </button>
+        <div class="carrusel-puntos" data-puntos></div>
+        <p class="carrusel-contador" data-contador-texto aria-hidden="true"></p>
+        <button type="button" class="carrusel-boton" data-siguiente aria-label="Testimonios siguientes">
+          <Icono nombre="flechaDer" tam={22} />
+        </button>
+        <button type="button" class="carrusel-boton carrusel-pausa" data-auto aria-pressed="false" hidden>
+          <span class="sr-only" data-auto-texto>Pausar el avance automático</span>
+          <svg class="i-pausa" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><rect x="3.5" y="2.5" width="3" height="11" rx="1.2" /><rect x="9.5" y="2.5" width="3" height="11" rx="1.2" /></svg>
+          <svg class="i-play" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 2.8v10.4a.8.8 0 0 0 1.2.7l8.3-5.2a.8.8 0 0 0 0-1.4L5.7 2.1a.8.8 0 0 0-1.2.7z" /></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="experiencias-mas" data-revelar>
+      <a class="btn btn--suave btn--grande" href={url('experiencias/')}>Más experiencias ›</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .carrusel { position: relative; }
+  .carrusel-pista {
+    --por-vista: 1;
+    --hueco: var(--s-4);
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: calc((100% - var(--hueco) * (var(--por-vista) - 1)) / var(--por-vista));
+    gap: var(--hueco);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    padding: var(--s-2) 2px var(--s-5);
+    margin-inline: -2px;
+    border-radius: var(--r-lg);
+  }
+  .carrusel-pista::-webkit-scrollbar { display: none; }
+  .carrusel-pista.arrastrando { scroll-snap-type: none; scroll-behavior: auto; cursor: grabbing; user-select: none; }
+  .carrusel-item { scroll-snap-align: start; }
+  @media (min-width: 700px) { .carrusel-pista { --por-vista: 2; --hueco: var(--s-5); } }
+  @media (min-width: 1100px) { .carrusel-pista { --por-vista: 3; } }
+  @media (hover: hover) and (pointer: fine) { .carrusel-pista { cursor: grab; } }
+
+  .carrusel-controles {
+    display: flex; align-items: center; justify-content: center; gap: var(--s-3);
+    margin-top: var(--s-4);
+  }
+  .carrusel-controles[hidden] { display: none; }
+  .carrusel-boton {
+    display: grid; place-items: center;
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    border: 1px solid var(--linea);
+    background: var(--blanco);
+    color: var(--tinta);
+    transition: transform var(--t-media) var(--ease-suave), box-shadow var(--t-media) var(--ease-suave), opacity var(--t-media);
+  }
+  .carrusel-boton:hover:not(:disabled) { transform: translateY(-2px); box-shadow: var(--sombra-1); }
+  .carrusel-boton:disabled { opacity: 0.4; cursor: default; }
+  .carrusel-pausa { width: 40px; height: 40px; color: var(--gris-texto); margin-left: var(--s-2); }
+  .carrusel-pausa[hidden] { display: none; }
+  .carrusel-pausa svg { fill: currentColor; }
+  .carrusel-pausa .i-play, .carrusel-pausa[aria-pressed='true'] .i-pausa { display: none; }
+  .carrusel-pausa[aria-pressed='true'] .i-play { display: block; }
+
+  .carrusel-puntos { display: none; align-items: center; }
+  .carrusel-contador { font-weight: 700; font-size: var(--fs-sm); color: var(--gris-texto); min-width: 4.5em; text-align: center; font-variant-numeric: tabular-nums; }
+  @media (min-width: 700px) {
+    .carrusel-puntos { display: flex; }
+    .carrusel-contador { display: none; }
+  }
+  .carrusel-puntos :global(button) {
+    display: grid; place-items: center;
+    width: 24px; height: 24px;
+    padding: 0; border: 0; background: none;
+  }
+  .carrusel-puntos :global(button)::before {
+    content: '';
+    width: 8px; height: 8px;
+    border-radius: var(--r-pill);
+    background: #b9b9c0;
+    transition: width var(--t-media) var(--ease-suave), background-color var(--t-media) var(--ease-suave);
+  }
+  .carrusel-puntos :global(button[aria-current='true'])::before { width: 22px; background: var(--rosa); }
+
+  .experiencias-mas { display: flex; justify-content: center; margin-top: var(--s-6); }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-carrusel]').forEach((c) => {
+    const pista = c.querySelector<HTMLElement>('[data-pista]')!;
+    const items = [...pista.children] as HTMLElement[];
+    const controles = c.querySelector<HTMLElement>('[data-controles]')!;
+    const ant = c.querySelector<HTMLButtonElement>('[data-anterior]')!;
+    const sig = c.querySelector<HTMLButtonElement>('[data-siguiente]')!;
+    const puntos = c.querySelector<HTMLElement>('[data-puntos]')!;
+    const contador = c.querySelector<HTMLElement>('[data-contador-texto]')!;
+    const auto = c.querySelector<HTMLButtonElement>('[data-auto]')!;
+    const autoTexto = c.querySelector<HTMLElement>('[data-auto-texto]')!;
+    const reducido = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    controles.hidden = false;
+
+    const porVista = () => Math.max(1, Math.round(pista.clientWidth / items[0].getBoundingClientRect().width));
+    const paginas = () => Math.ceil(items.length / porVista());
+    const pagina = () => {
+      const max = pista.scrollWidth - pista.clientWidth;
+      if (pista.scrollLeft >= max - 4) return paginas() - 1;
+      return Math.round(pista.scrollLeft / (items[0].getBoundingClientRect().width + parseFloat(getComputedStyle(pista).columnGap)) / porVista());
+    };
+    const ir = (p: number) => {
+      const n = paginas();
+      const destino = items[Math.min(items.length - 1, ((p % n) + n) % n * porVista())];
+      pista.scrollTo({ left: destino.offsetLeft - pista.offsetLeft - 2, behavior: reducido ? 'auto' : 'smooth' });
+    };
+
+    function pintarPuntos() {
+      const n = paginas();
+      if (puntos.children.length !== n) {
+        puntos.replaceChildren(...Array.from({ length: n }, (_, i) => {
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.setAttribute('aria-label', `Ir al grupo ${i + 1} de ${n}`);
+          b.addEventListener('click', () => { ir(i); parar(); });
+          return b;
+        }));
+      }
+      actualizar();
+    }
+    function actualizar() {
+      const p = pagina(), n = paginas();
+      [...puntos.children].forEach((b, i) => b.setAttribute('aria-current', String(i === p)));
+      contador.textContent = `${p + 1} / ${n}`;
+      ant.disabled = p === 0;
+      sig.disabled = p === n - 1 && !temporizador;
+    }
+    ant.addEventListener('click', () => { ir(pagina() - 1); parar(); });
+    sig.addEventListener('click', () => { ir(pagina() + 1); parar(); });
+    let cuadro = 0;
+    pista.addEventListener('scroll', () => { cancelAnimationFrame(cuadro); cuadro = requestAnimationFrame(actualizar); }, { passive: true });
+    new ResizeObserver(pintarPuntos).observe(pista);
+
+    // Teclado en la pista
+    pista.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') { e.preventDefault(); ir(pagina() + 1); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); ir(pagina() - 1); }
+    });
+
+    // Arrastre con ratón (en táctil ya funciona el scroll nativo)
+    let x0 = 0, s0 = 0, moviendo = false, movido = false;
+    pista.addEventListener('pointerdown', (e) => {
+      if (e.pointerType !== 'mouse' || e.button !== 0) return;
+      moviendo = true; movido = false; x0 = e.clientX; s0 = pista.scrollLeft;
+    });
+    window.addEventListener('pointermove', (e) => {
+      if (!moviendo) return;
+      const dx = e.clientX - x0;
+      if (!movido && Math.abs(dx) > 5) { movido = true; pista.classList.add('arrastrando'); pista.setPointerCapture?.(e.pointerId); }
+      if (movido) pista.scrollLeft = s0 - dx;
+    });
+    const soltar = () => {
+      if (!moviendo) return;
+      moviendo = false;
+      if (!movido) return;
+      const ancho = items[0].getBoundingClientRect().width;
+      const desde = s0, hasta = pista.scrollLeft;
+      pista.classList.remove('arrastrando');
+      const paso = (hasta - desde) / ancho;
+      const base = Math.round(desde / (ancho + parseFloat(getComputedStyle(pista).columnGap)));
+      const destino = base + (Math.abs(paso) > 0.15 ? Math.sign(paso) * Math.max(1, Math.round(Math.abs(paso))) : 0);
+      const item = items[Math.max(0, Math.min(items.length - 1, destino))];
+      pista.scrollTo({ left: item.offsetLeft - pista.offsetLeft - 2, behavior: 'smooth' });
+      parar();
+    };
+    window.addEventListener('pointerup', soltar);
+    window.addEventListener('pointercancel', soltar);
+    pista.addEventListener('click', (e) => { if (movido) { e.preventDefault(); e.stopPropagation(); movido = false; } }, true);
+    pista.addEventListener('dragstart', (e) => e.preventDefault());
+
+    // Avance automático
+    let temporizador = 0, detenido = false, encima = false;
+    function arrancar() {
+      if (reducido || detenido || encima || temporizador) return;
+      temporizador = window.setInterval(() => ir(pagina() + 1), 7000);
+    }
+    function pausar() { clearInterval(temporizador); temporizador = 0; }
+    function parar() {
+      // Si la persona toca el carrusel, el avance automático se detiene del todo.
+      detenido = true; pausar();
+      auto.setAttribute('aria-pressed', 'true');
+      autoTexto.textContent = 'Reanudar el avance automático';
+      actualizar();
+    }
+    if (!reducido) {
+      auto.hidden = false;
+      auto.addEventListener('click', () => {
+        if (detenido) {
+          detenido = false;
+          auto.setAttribute('aria-pressed', 'false');
+          autoTexto.textContent = 'Pausar el avance automático';
+          arrancar();
+        } else parar();
+      });
+      c.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') { encima = true; pausar(); } });
+      c.addEventListener('pointerleave', () => { encima = false; arrancar(); });
+      c.addEventListener('focusin', () => { encima = true; pausar(); });
+      c.addEventListener('focusout', (e) => { if (!c.contains(e.relatedTarget as Node)) { encima = false; arrancar(); } });
+      new IntersectionObserver(([e]) => (e.isIntersecting ? arrancar() : pausar())).observe(c);
+    }
+  });
+</script>

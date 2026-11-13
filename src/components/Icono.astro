@@ -1,0 +1,19 @@
+---
+import { iconos, type NombreIcono } from './iconos';
+interface Props { nombre: NombreIcono; tam?: number; clase?: string }
+const { nombre, tam = 24, clase } = Astro.props;
+---
+<svg
+  class:list={['icono', clase]}
+  width={tam}
+  height={tam}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.6"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  focusable="false"
+  set:html={iconos[nombre]}
+/>

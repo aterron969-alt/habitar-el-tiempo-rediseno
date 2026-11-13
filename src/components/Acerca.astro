@@ -1,0 +1,215 @@
+---
+// Portada · «Acerca de: Habitar el Tiempo» (ancla #acerca).
+// Los cinco bloques son pestañas accesibles en escritorio y acordeón en móvil.
+// Sin JavaScript se ven todos, uno debajo de otro.
+// «Situación actual» va siempre sin animación, por respeto al contenido.
+import { Image } from 'astro:assets';
+import Icono from './Icono.astro';
+import rafael from '../assets/orig/Rafael-de-Silva.webp';
+import { acerca } from '../data/portada';
+import { externos } from '../data/sitio';
+
+const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+// [texto](url) -> enlace
+const conEnlaces = (s: string) =>
+  esc(s).replace(/\[([^\]]+)\]\((https:[^)]+)\)/g, '<a href="$2" rel="noopener">$1</a>');
+---
+<section class="seccion acerca" id="acerca" aria-labelledby="acerca-titulo">
+  <div class="container acerca-rejilla">
+    <div class="acerca-perfil" data-revelar>
+      <div class="acerca-foto">
+        <Image src={rafael} alt="Rafael de Silva, fundador de la escuela" widths={[280, 400]} sizes="280px" class="acerca-img" />
+      </div>
+      <p class="acerca-nombre">{acerca.nombre}</p>
+      <a class="btn btn--suave" href={externos.encuentros} rel="noopener">
+        Ver encuentros
+        <Icono nombre="flechaDiag" tam={18} />
+      </a>
+    </div>
+
+    <div class="acerca-contenido">
+      <div class="titulo-seccion titulo-seccion--izq" data-revelar>
+        <span class="antetitulo">{acerca.antetitulo}</span>
+        <h2 id="acerca-titulo">{acerca.titulo}</h2>
+      </div>
+
+      <div class="pestanas" data-pestanas>
+        <div class="pestanas-lista" role="tablist" aria-label="Sobre Rafael de Silva" hidden data-lista>
+          {acerca.bloques.map((b, i) => (
+            <button
+              type="button"
+              role="tab"
+              id={`tab-${b.id}`}
+              aria-controls={`panel-${b.id}`}
+              aria-selected={i === 0 ? 'true' : 'false'}
+              tabindex={i === 0 ? 0 : -1}
+            >{b.titulo}</button>
+          ))}
+        </div>
+
+        {acerca.bloques.map((b) => (
+          <div class:list={['bloque', { 'bloque--sereno': b.id === 'situacion' }]} data-bloque={b.id}>
+            <h3 class="bloque-titulo" data-titulo>{b.titulo}</h3>
+            <div class="bloque-panel" id={`panel-${b.id}`} data-panel>
+              {b.parrafos.map((p) => <p set:html={conEnlaces(p)} />)}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .acerca-rejilla { display: grid; gap: var(--s-7); }
+  .acerca-perfil { display: grid; justify-items: center; gap: var(--s-3); text-align: center; }
+  .acerca-foto {
+    width: min(240px, 64vw);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--turquesa);
+    overflow: hidden;
+    box-shadow: 0 0 0 10px var(--turquesa-velo);
+  }
+  :global(.acerca-img) { width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%; }
+  .acerca-nombre { margin-top: var(--s-3); font-size: var(--fs-lg); font-weight: 800; }
+
+  .bloque + .bloque { margin-top: var(--s-5); }
+  .bloque-titulo { font-size: var(--fs-md); margin-bottom: var(--s-2); }
+  .bloque-panel p { color: #3a3a3e; max-width: var(--ancho-texto); }
+  .bloque-panel p + p { margin-top: var(--s-3); }
+
+  /* --- Modo pestañas (escritorio, con JS) --- */
+  .pestanas-lista {
+    display: flex; flex-wrap: wrap; gap: var(--s-1);
+    padding: 5px;
+    margin-bottom: var(--s-6);
+    border-radius: var(--r-pill);
+    background: var(--niebla);
+    width: fit-content;
+  }
+  .pestanas-lista[hidden] { display: none; }
+  .pestanas-lista button {
+    min-height: 44px;
+    padding: 0.5rem 1.1rem;
+    border: 0;
+    border-radius: var(--r-pill);
+    background: transparent;
+    color: var(--gris-texto);
+    font-weight: 700;
+    font-size: var(--fs-sm);
+    transition: background-color var(--t-media) var(--ease-suave), color var(--t-media) var(--ease-suave), box-shadow var(--t-media) var(--ease-suave);
+  }
+  .pestanas-lista button:hover { color: var(--tinta); }
+  .pestanas-lista button[aria-selected='true'] { background: var(--blanco); color: var(--turquesa-texto); box-shadow: var(--sombra-1); }
+
+  .pestanas.es-pestanas .bloque + .bloque { margin-top: 0; }
+  .pestanas.es-pestanas .bloque-titulo { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .pestanas.es-pestanas .bloque-panel { min-height: 9rem; }
+  .pestanas.es-pestanas .bloque-panel:not([hidden]) { animation: panel-entra var(--t-media) var(--ease-suave); }
+  .pestanas.es-pestanas .bloque--sereno .bloque-panel { animation: none; }
+  @keyframes panel-entra { from { opacity: 0; transform: translateY(8px); } }
+
+  /* --- Modo acordeón (móvil, con JS) --- */
+  .pestanas.es-acordeon .bloque { border-bottom: 1px solid var(--linea); }
+  .pestanas.es-acordeon .bloque + .bloque { margin-top: 0; }
+  .pestanas.es-acordeon .bloque:first-of-type { border-top: 1px solid var(--linea); }
+  .pestanas.es-acordeon .bloque-titulo { margin: 0; }
+  .pestanas.es-acordeon .bloque-titulo :global(button) {
+    display: flex; align-items: center; justify-content: space-between; gap: var(--s-3);
+    width: 100%;
+    min-height: 56px;
+    padding: var(--s-3) 0;
+    border: 0; background: none;
+    font-weight: 700; text-align: left;
+  }
+  .pestanas.es-acordeon .bloque-titulo :global(button)::after {
+    content: '';
+    flex: none;
+    width: 10px; height: 10px;
+    border-right: 2px solid var(--turquesa-texto);
+    border-bottom: 2px solid var(--turquesa-texto);
+    transform: translateY(-3px) rotate(45deg);
+    transition: transform var(--t-media) var(--ease-suave);
+  }
+  .pestanas.es-acordeon .bloque-titulo :global(button)[aria-expanded='true']::after { transform: translateY(2px) rotate(-135deg); }
+  .pestanas.es-acordeon .bloque-panel { padding-bottom: var(--s-5); }
+
+  @media (min-width: 1024px) {
+    .acerca-rejilla { grid-template-columns: 300px 1fr; gap: var(--s-9); align-items: start; }
+    .acerca-perfil { position: sticky; top: calc(var(--cabecera) + var(--s-6)); }
+    .acerca-foto { width: 260px; }
+  }
+</style>
+
+<script>
+  // Pestañas (≥ 900 px) o acordeón (< 900 px). Patrón ARIA de tabs con flechas, Inicio y Fin.
+  document.querySelectorAll<HTMLElement>('[data-pestanas]').forEach((raiz) => {
+    const lista = raiz.querySelector<HTMLElement>('[data-lista]')!;
+    const tabs = [...lista.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+    const bloques = [...raiz.querySelectorAll<HTMLElement>('[data-bloque]')];
+    const paneles = bloques.map((b) => b.querySelector<HTMLElement>('[data-panel]')!);
+    const titulos = bloques.map((b) => b.querySelector<HTMLElement>('[data-titulo]')!);
+    let activo = 0;
+
+    // Botones del acordeón dentro de cada h3
+    const botones = titulos.map((h, i) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = h.textContent;
+      b.id = `acordeon-${bloques[i].dataset.bloque}`;
+      b.setAttribute('aria-controls', paneles[i].id);
+      b.addEventListener('click', () => {
+        const abierto = b.getAttribute('aria-expanded') === 'true';
+        b.setAttribute('aria-expanded', String(!abierto));
+        paneles[i].hidden = abierto;
+      });
+      return b;
+    });
+
+    function seleccionar(i: number, foco = false) {
+      activo = i;
+      tabs.forEach((t, n) => {
+        t.setAttribute('aria-selected', String(n === i));
+        t.tabIndex = n === i ? 0 : -1;
+        paneles[n].hidden = n !== i;
+      });
+      if (foco) tabs[i].focus();
+    }
+    lista.addEventListener('click', (e) => {
+      const t = (e.target as HTMLElement).closest<HTMLButtonElement>('[role="tab"]');
+      if (t) seleccionar(tabs.indexOf(t));
+    });
+    lista.addEventListener('keydown', (e) => {
+      const n = tabs.length;
+      const mapa: Record<string, number> = { ArrowRight: (activo + 1) % n, ArrowLeft: (activo - 1 + n) % n, Home: 0, End: n - 1 };
+      if (e.key in mapa) { e.preventDefault(); seleccionar(mapa[e.key], true); }
+    });
+
+    const ancho = matchMedia('(min-width: 900px)');
+    function modo() {
+      const pestanas = ancho.matches;
+      raiz.classList.toggle('es-pestanas', pestanas);
+      raiz.classList.toggle('es-acordeon', !pestanas);
+      lista.hidden = !pestanas;
+      paneles.forEach((p, i) => {
+        if (pestanas) {
+          titulos[i].textContent = botones[i].textContent;
+          p.setAttribute('role', 'tabpanel');
+          p.setAttribute('aria-labelledby', tabs[i].id);
+          p.tabIndex = 0;
+        } else {
+          titulos[i].replaceChildren(botones[i]);
+          p.removeAttribute('role');
+          p.setAttribute('aria-labelledby', botones[i].id);
+          p.removeAttribute('tabindex');
+          botones[i].setAttribute('aria-expanded', String(i === 0));
+          p.hidden = i !== 0;
+        }
+      });
+      if (pestanas) seleccionar(activo);
+    }
+    ancho.addEventListener('change', modo);
+    modo();
+  });
+</script>

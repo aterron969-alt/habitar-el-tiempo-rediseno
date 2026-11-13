@@ -1,0 +1,166 @@
+---
+// Portada · «¡Deja de posponerte!» + «¿Cómo es?» (ancla #como-es, destino de «+ Info»)
+// y la cita de Patricia Villa.
+import { Image } from 'astro:assets';
+import Icono from './Icono.astro';
+import alumna from '../assets/orig/alumna-curso-mindfulness-onlive.webp';
+import patricia from '../assets/orig/Patricia-Villa.webp';
+import { comoEs, citaPatricia } from '../data/portada';
+import { url } from '../lib/url';
+---
+<section class="seccion como" aria-labelledby="como-titulo">
+  <div class="container">
+    <div class="titulo-seccion" data-revelar>
+      <h2 id="como-titulo">{comoEs.antetitulo}</h2>
+    </div>
+
+    <div class="como-rejilla">
+      <figure class="como-tarjeta" data-revelar>
+        <Image
+          src={alumna}
+          alt="Ilustración: una alumna medita en casa mientras sigue una sesión por videoconferencia"
+          widths={[400, 600, 900]}
+          sizes="(min-width: 1024px) 520px, 92vw"
+          class="como-img"
+        />
+        <figcaption class="como-pie">
+          <span class="como-pie-titulo">{comoEs.tarjeta.titulo}</span>
+          <span class="como-pie-sub">{comoEs.tarjeta.sub}</span>
+          <a href={url('consultame/#solicita')} class="btn btn--primario" data-abrir-sesiones>Empieza ahora</a>
+        </figcaption>
+      </figure>
+
+      <div class="como-texto" id="como-es">
+        <h3 class="como-h3" data-revelar>{comoEs.titulo}</h3>
+        <ol role="list" class="pasos" data-revelar-grupo>
+          {comoEs.puntos.map((p, i) => (
+            <li class="paso">
+              <span class="paso-icono"><Icono nombre={p.icono} tam={26} /><span class="paso-n" aria-hidden="true">{i + 1}</span></span>
+              <p>{p.texto}</p>
+            </li>
+          ))}
+        </ol>
+
+        <div class="aportacion" data-revelar>
+          <p>
+            <a href={url('mecenazgo/')}>{comoEs.mecenazgo}</a>
+          </p>
+          <!-- PENDIENTE: importe sugerido de la escuela -->
+          <p class="aportacion-importe">
+            <Icono nombre="corazon" tam={22} />
+            {comoEs.aportacion}
+          </p>
+        </div>
+
+        <div class="acciones" data-revelar>
+          <a href={url('consultame/#solicita')} class="btn btn--primario btn--grande" data-abrir-sesiones>Empieza ahora</a>
+        </div>
+      </div>
+    </div>
+
+    <figure class="cita" data-revelar>
+      <Image src={patricia} alt="Patricia Villa, directora de la escuela" width={140} densities={[1, 2]} class="cita-foto" />
+      <blockquote class="cita-texto">
+        <p>{citaPatricia.texto}</p>
+      </blockquote>
+      <figcaption class="cita-autora">{citaPatricia.nombre}</figcaption>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .como-rejilla { display: grid; gap: var(--s-7); align-items: start; }
+
+  .como-tarjeta {
+    position: relative;
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    background: var(--blanco);
+    box-shadow: var(--sombra-2);
+  }
+  :global(.como-img) { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+  .como-pie {
+    display: grid; gap: var(--s-1);
+    justify-items: start;
+    padding: var(--s-5);
+  }
+  .como-pie-titulo { font-size: var(--fs-lg); font-weight: 800; line-height: 1.2; }
+  .como-pie-sub { color: var(--gris-texto); margin-bottom: var(--s-3); }
+
+  .como-texto { scroll-margin-top: calc(var(--cabecera) + 16px); }
+  .como-h3 { font-size: var(--fs-xl); margin-bottom: var(--s-5); color: var(--turquesa-texto); }
+
+  .pasos { display: grid; gap: var(--s-5); }
+  .paso { display: grid; grid-template-columns: auto 1fr; gap: var(--s-4); align-items: start; }
+  .paso p { color: #3a3a3e; }
+  .paso-icono {
+    position: relative;
+    display: grid; place-items: center;
+    width: 52px; height: 52px;
+    border-radius: 50%;
+    background: var(--turquesa-velo);
+    color: var(--turquesa-texto);
+  }
+  .paso-n {
+    position: absolute; right: -4px; top: -4px;
+    display: grid; place-items: center;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--turquesa-texto);
+    color: var(--blanco);
+    font-size: 0.75rem; font-weight: 800;
+    box-shadow: 0 0 0 3px var(--blanco);
+  }
+
+  .aportacion {
+    margin-top: var(--s-6);
+    padding: var(--s-5);
+    border-radius: var(--r-md);
+    background: var(--niebla);
+    display: grid; gap: var(--s-3);
+  }
+  .aportacion a { color: var(--tinta); text-decoration-color: color-mix(in srgb, var(--turquesa) 60%, white); }
+  .aportacion a:hover { color: var(--turquesa-texto); }
+  .aportacion-importe {
+    display: flex; align-items: center; gap: var(--s-2);
+    font-weight: 800; font-size: var(--fs-md);
+    color: var(--turquesa-texto);
+  }
+  .acciones { display: flex; flex-wrap: wrap; gap: var(--s-3); margin-top: var(--s-5); }
+
+  /* Cita de Patricia */
+  .cita {
+    position: relative;
+    margin: var(--s-9) auto 0;
+    max-width: 860px;
+    padding: var(--s-8) var(--s-5) var(--s-6);
+    border-radius: var(--r-lg);
+    background: linear-gradient(180deg, var(--turquesa-velo), var(--blanco));
+    text-align: center;
+  }
+  :global(.cita-foto) {
+    position: absolute; left: 50%; top: 0;
+    width: 104px; height: 104px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--blanco);
+    box-shadow: 0 0 0 6px var(--blanco), var(--sombra-2);
+  }
+  .cita-texto p {
+    font-size: var(--fs-md);
+    line-height: 1.6;
+    color: var(--tinta);
+    max-width: 62ch;
+    margin-inline: auto;
+  }
+  .cita-texto p::before { content: '“'; }
+  .cita-texto p::after { content: '”'; }
+  .cita-autora { margin-top: var(--s-4); font-weight: 800; color: var(--turquesa-texto); }
+
+  @media (min-width: 1024px) {
+    .como-rejilla { grid-template-columns: 1fr 1.1fr; gap: var(--s-8); }
+    .como-tarjeta { position: sticky; top: calc(var(--cabecera) + var(--s-5)); }
+    .cita { padding: var(--s-8) var(--s-8) var(--s-7); }
+  }
+</style>

@@ -1,0 +1,140 @@
+---
+// Portada · «Han confiado en esta Escuela...»: frase + cinta infinita de logos.
+// Logos en gris que pasan a color al pasar el ratón. La cinta se pausa al pasar
+// el ratón, al enfocarla o con el botón de pausa. Con prefers-reduced-motion
+// (o sin JS) se muestra como cuadrícula.
+import { Image } from 'astro:assets';
+import ilustracion from '../assets/orig/mindfulness-empresas.webp';
+import { logos } from '../data/logos';
+import { confianza } from '../data/portada';
+import { imagen } from '../lib/imagenes';
+---
+<section class="seccion confianza" aria-labelledby="confianza-titulo">
+  <div class="container">
+    <div class="confianza-cabeza">
+      <div data-revelar>
+        <h2 id="confianza-titulo" class="h2">{confianza.titulo}</h2>
+        <p class="lead confianza-frase">{confianza.frase}</p>
+      </div>
+      <Image
+        src={ilustracion}
+        alt="Ilustración: un trabajador medita sentado en su silla de oficina"
+        widths={[360, 540, 710]}
+        sizes="(min-width: 1024px) 460px, 92vw"
+        class="confianza-img"
+        data-revelar="0.1"
+      />
+    </div>
+  </div>
+
+  <div class="cinta" data-cinta>
+    <div class="cinta-mascara">
+      <ul role="list" class="cinta-pista" data-cinta-pista aria-label="Organizaciones que han confiado en la escuela">
+        {logos.map((l) => (
+          <li class="cinta-logo">
+            <Image src={imagen(l.archivo)} alt={l.nombre} height={64} densities={[1, 2]} class="cinta-img" />
+          </li>
+        ))}
+      </ul>
+    </div>
+    <button type="button" class="cinta-pausa" aria-pressed="false" data-cinta-pausa hidden>
+      <span class="sr-only" data-cinta-pausa-texto>Pausar la cinta de logos</span>
+      <svg class="i-pausa" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><rect x="3.5" y="2.5" width="3" height="11" rx="1.2" /><rect x="9.5" y="2.5" width="3" height="11" rx="1.2" /></svg>
+      <svg class="i-play" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 2.8v10.4a.8.8 0 0 0 1.2.7l8.3-5.2a.8.8 0 0 0 0-1.4L5.7 2.1a.8.8 0 0 0-1.2.7z" /></svg>
+    </button>
+  </div>
+</section>
+
+<style>
+  .confianza-cabeza { display: grid; gap: var(--s-6); align-items: center; margin-bottom: var(--s-7); }
+  .confianza-frase { margin-top: var(--s-4); max-width: 46ch; }
+  :global(.confianza-img) { width: min(100%, 460px); justify-self: center; border-radius: var(--r-lg); }
+  @media (min-width: 1024px) {
+    .confianza-cabeza { grid-template-columns: 1.1fr 0.9fr; gap: var(--s-8); }
+  }
+
+  /* Sin JS o con movimiento reducido: cuadrícula */
+  .cinta { position: relative; }
+  .cinta-mascara { max-width: calc(var(--ancho) + var(--gutter) * 2); margin-inline: auto; padding-inline: var(--gutter); }
+  .cinta-pista {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: var(--s-4);
+  }
+  .cinta-logo {
+    display: grid; place-items: center;
+    height: 88px;
+    padding: var(--s-3) var(--s-4);
+    border-radius: var(--r-md);
+    background: var(--blanco);
+    border: 1px solid var(--linea);
+  }
+  :global(.cinta-img) {
+    width: auto; height: auto;
+    max-height: 56px; max-width: 140px;
+    object-fit: contain;
+    filter: grayscale(1);
+    opacity: 0.72;
+    transition: filter var(--t-lenta) var(--ease-suave), opacity var(--t-lenta) var(--ease-suave);
+  }
+  .cinta-logo:hover :global(.cinta-img) { filter: none; opacity: 1; }
+
+  /* Con JS y movimiento: marquesina infinita */
+  .cinta.es-marquesina .cinta-mascara {
+    max-width: none;
+    padding: 0;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+  .cinta.es-marquesina .cinta-pista {
+    display: flex;
+    width: max-content;
+    gap: var(--s-4);
+    padding-block: var(--s-2);
+    animation: cinta 70s linear infinite;
+  }
+  .cinta.es-marquesina .cinta-logo { width: 176px; flex: none; }
+  .cinta.es-marquesina:hover .cinta-pista,
+  .cinta.es-marquesina:focus-within .cinta-pista,
+  .cinta.esta-pausada .cinta-pista { animation-play-state: paused; }
+  @keyframes cinta { to { transform: translateX(calc(-50% - var(--s-4) / 2)); } }
+
+  .cinta-pausa {
+    display: grid; place-items: center;
+    width: 40px; height: 40px;
+    margin: var(--s-4) auto 0;
+    border-radius: 50%;
+    border: 1px solid var(--linea);
+    background: var(--blanco);
+    color: var(--gris-texto);
+  }
+  .cinta-pausa[hidden] { display: none; }
+  .cinta-pausa svg { fill: currentColor; }
+  .cinta-pausa .i-play, .cinta-pausa[aria-pressed='true'] .i-pausa { display: none; }
+  .cinta-pausa[aria-pressed='true'] .i-play { display: block; }
+</style>
+
+<script>
+  const reducido = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLElement>('[data-cinta]').forEach((cinta) => {
+    if (reducido) return;
+    const pista = cinta.querySelector<HTMLElement>('[data-cinta-pista]')!;
+    // Segunda copia para el bucle sin costuras; oculta a lectores de pantalla.
+    [...pista.children].forEach((li) => {
+      const copia = li.cloneNode(true) as HTMLElement;
+      copia.setAttribute('aria-hidden', 'true');
+      copia.querySelector('img')?.setAttribute('alt', '');
+      pista.appendChild(copia);
+    });
+    cinta.classList.add('es-marquesina');
+    const boton = cinta.querySelector<HTMLButtonElement>('[data-cinta-pausa]')!;
+    const texto = cinta.querySelector<HTMLElement>('[data-cinta-pausa-texto]')!;
+    boton.hidden = false;
+    boton.addEventListener('click', () => {
+      const p = cinta.classList.toggle('esta-pausada');
+      boton.setAttribute('aria-pressed', String(p));
+      texto.textContent = p ? 'Reanudar la cinta de logos' : 'Pausar la cinta de logos';
+    });
+  });
+</script>
