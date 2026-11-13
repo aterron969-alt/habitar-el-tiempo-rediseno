@@ -1,0 +1,110 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Planta from '../components/Planta.astro';
+import Icono from '../components/Icono.astro';
+import banner from '../assets/orig/mecenazgo-mindfulness.webp';
+import patricia from '../assets/orig/Patricia-directora-HT.webp';
+import { citaMecenazgo, invitacion, cuotas, notaSuscripcion, puntual } from '../data/mecenazgo';
+---
+<Base
+  titulo="Mecenazgo · Habitar el Tiempo"
+  descripcion="Hazte mecenas de la Escuela de Mindfulness Habitar el Tiempo y ayuda a que las sesiones sigan siendo accesibles para todas las personas, con independencia de sus recursos."
+>
+  <section class="cabeza-mec">
+    <div class="container">
+      <h1 class="sr-only">Mecenazgo</h1>
+      <Image src={banner} alt="Mindfulness: un bosque ilustrado con un árbol frondoso" widths={[640, 1080]} sizes="(min-width: 1200px) 1200px, 100vw" loading="eager" fetchpriority="high" class="banner" />
+    </div>
+  </section>
+
+  <section class="seccion carta" aria-label="Carta de Patricia Villa">
+    <div class="container carta-caja" data-revelar>
+      <Image src={patricia} alt="Patricia Villa, directora de la escuela" width={120} densities={[1, 2]} class="carta-foto" />
+      <div>
+        {citaMecenazgo.parrafos.map((p) => <p class="carta-p">{p}</p>)}
+        <p class="carta-firma">{citaMecenazgo.nombre}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion seccion--niebla" aria-labelledby="elige-titulo">
+    <div class="container">
+      <p class="lead invitacion" data-revelar>{invitacion}</p>
+      <div class="titulo-seccion" data-revelar>
+        <h2 id="elige-titulo">Elige tu mecenazgo*</h2>
+      </div>
+
+      <ul role="list" class="cuotas" data-revelar-grupo>
+        {cuotas.map((c) => (
+          <li class="cuota">
+            <Planta tipo={c.id} />
+            <h3 class="cuota-nombre">{c.nombre}</h3>
+            <p class="cuota-precio">{c.precio}<span> / mes</span></p>
+            <p class="cuota-texto">{c.texto}</p>
+            <a class="btn btn--primario cuota-boton" href={c.enlace} rel="noopener">Elegir {c.nombre}</a>
+          </li>
+        ))}
+      </ul>
+      <p class="nota">{notaSuscripcion}</p>
+
+      <div class="puntual" data-revelar>
+        <span class="puntual-icono"><Icono nombre="corazon" tam={28} /></span>
+        <div>
+          <h3>{puntual.titulo}</h3>
+          <p>{puntual.texto}</p>
+        </div>
+        <a class="btn btn--suave btn--grande" href={puntual.enlace} rel="noopener">Hacer una aportación</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .cabeza-mec { padding-top: var(--s-5); }
+  :global(.banner) { width: 100%; height: auto; border-radius: var(--r-lg); aspect-ratio: 4 / 1; object-fit: cover; }
+
+  .carta-caja { display: grid; gap: var(--s-5); max-width: 860px; justify-items: center; text-align: center; }
+  :global(.carta-foto) { width: 112px; height: 112px; border-radius: 50%; object-fit: cover; box-shadow: 0 0 0 6px var(--turquesa-velo); }
+  .carta-p { font-size: var(--fs-md); line-height: 1.6; }
+  .carta-p + .carta-p { margin-top: var(--s-4); font-weight: 700; }
+  .carta-firma { margin-top: var(--s-4); font-weight: 800; color: var(--turquesa-texto); }
+  @media (min-width: 900px) {
+    .carta-caja { grid-template-columns: auto 1fr; justify-items: start; text-align: left; gap: var(--s-7); align-items: start; }
+  }
+
+  .invitacion { text-align: center; max-width: 60ch; margin: 0 auto var(--s-7); color: var(--tinta); }
+  .cuotas { display: grid; gap: var(--s-5); }
+  @media (min-width: 900px) { .cuotas { grid-template-columns: repeat(3, 1fr); } }
+  .cuota {
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    padding: var(--s-6) var(--s-5);
+    border-radius: var(--r-lg);
+    background: var(--blanco);
+    border: 1px solid var(--linea);
+    box-shadow: var(--sombra-1);
+    transition: transform var(--t-media) var(--ease-suave), box-shadow var(--t-media) var(--ease-suave);
+  }
+  .cuota:hover, .cuota:focus-within { transform: translateY(-4px); box-shadow: var(--sombra-2); }
+  .cuota:hover :global(.planta g), .cuota:focus-within :global(.planta g) { transform: scale(1.07); }
+  .cuota-nombre { margin-top: var(--s-3); font-size: var(--fs-lg); font-weight: 800; letter-spacing: 0.06em; }
+  .cuota-precio { font-size: var(--fs-xl); font-weight: 800; color: var(--turquesa-texto); line-height: 1.2; }
+  .cuota-precio span { font-size: var(--fs-sm); font-weight: 600; color: var(--gris-texto); }
+  .cuota-texto { margin: var(--s-3) 0 var(--s-5); color: #3a3a3e; flex: 1; }
+  .nota { margin-top: var(--s-4); text-align: center; font-size: var(--fs-sm); color: var(--gris-texto); }
+
+  .puntual {
+    display: grid; gap: var(--s-4); justify-items: center; text-align: center;
+    margin-top: var(--s-7);
+    padding: var(--s-6) var(--s-5);
+    border-radius: var(--r-lg);
+    border: 1px dashed color-mix(in srgb, var(--lila) 70%, white);
+    background: var(--blanco);
+  }
+  .puntual h3 { font-size: var(--fs-lg); }
+  .puntual p { color: var(--gris-texto); }
+  .puntual-icono { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: color-mix(in srgb, var(--lila) 22%, white); color: #6b4a85; }
+  @media (min-width: 900px) {
+    .puntual { grid-template-columns: auto 1fr auto; justify-items: start; text-align: left; align-items: center; padding: var(--s-5) var(--s-6); }
+  }
+</style>

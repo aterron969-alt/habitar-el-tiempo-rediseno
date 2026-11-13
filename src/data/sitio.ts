@@ -6,7 +6,8 @@ export const ORIGINAL = 'https://habitareltiempo.com';
 
 export const externos = {
   publicaciones: `${ORIGINAL}/publicaciones-mindfulness/`,
-  encuentros: `${ORIGINAL}/encuentros-mindfulness/`,
+  // El original enlaza a /encuentros-mindfulness/, que da 404; la página actual es esta.
+  encuentros: `${ORIGINAL}/encuentros-conscientes/`,
   esclerosis: `${ORIGINAL}/mindfulness-y-esclerosis-multiple/`,
   avisoLegal: `${ORIGINAL}/aviso-legal/`,
   privacidad: `${ORIGINAL}/politica-de-privacidad/`,

@@ -1,0 +1,62 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import TarjetaTestimonio from '../components/TarjetaTestimonio.astro';
+import rafael from '../assets/orig/fotografia-Rafael-de-Silva.webp';
+import { testimoniosExperiencias } from '../data/testimonios';
+import { url } from '../lib/url';
+---
+<Base
+  titulo="Experiencias · Habitar el Tiempo"
+  descripcion="Tantas personas, tantas experiencias: lo que cuenta el alumnado de la Escuela de Mindfulness Habitar el Tiempo tras sus sesiones y cursos."
+>
+  <section class="cabeza-pagina">
+    <div class="container cabeza-rejilla">
+      <div data-revelar>
+        <p class="antetitulo">Experiencias</p>
+        <h1 class="titulo-pagina">Tantas personas, tantas experiencias...</h1>
+        <p class="lead">Ha sido un lujo para mí, guiarte por este camino.</p>
+        <p class="firma">Rafael de Silva</p>
+      </div>
+      <Image src={rafael} alt="Rafael de Silva sonríe" widths={[320, 520, 700]} sizes="(min-width: 900px) 380px, 70vw" loading="eager" class="cabeza-foto" data-revelar="0.1" />
+    </div>
+  </section>
+
+  <section class="seccion seccion--niebla" aria-label="Testimonios del alumnado">
+    <div class="container">
+      <ul role="list" class="muro">
+        {testimoniosExperiencias.map((t) => (
+          <li><TarjetaTestimonio t={t} /></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="seccion cierre" aria-labelledby="cierre-titulo">
+    <div class="container cierre-caja" data-revelar>
+      <p class="lead">Para ti, quizá sólo son historias</p>
+      <h2 id="cierre-titulo" class="h2">Pero, ¿quieres formar parte de ellas?</h2>
+      <a href={url('consultame/#solicita')} class="btn btn--primario btn--grande" data-abrir-sesiones>Sesiones individuales</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .cabeza-pagina {
+    padding-block: var(--s-7) var(--s-8);
+    background: radial-gradient(60% 70% at 80% 40%, var(--cielo) 0%, rgb(230 242 250 / 0) 70%), var(--blanco);
+  }
+  .cabeza-rejilla { display: grid; gap: var(--s-6); align-items: center; }
+  .titulo-pagina { font-size: var(--fs-2xl); font-weight: 800; letter-spacing: -0.025em; margin-bottom: var(--s-4); }
+  .firma { margin-top: var(--s-3); font-weight: 800; color: var(--turquesa-texto); }
+  :global(.cabeza-foto) { width: min(100%, 380px); justify-self: center; height: auto; }
+  @media (min-width: 900px) { .cabeza-rejilla { grid-template-columns: 1.2fr 0.8fr; } }
+
+  .muro { columns: 1; column-gap: var(--s-5); }
+  .muro > li { break-inside: avoid; margin-bottom: var(--s-5); }
+  @media (min-width: 700px) { .muro { columns: 2; } }
+  @media (min-width: 1100px) { .muro { columns: 3; } }
+
+  .cierre-caja { display: grid; justify-items: center; gap: var(--s-3); text-align: center; }
+  .cierre-caja .btn { margin-top: var(--s-4); }
+</style>

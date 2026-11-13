@@ -1,0 +1,85 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Campo from '../components/Campo.astro';
+import AvisoDemo from '../components/AvisoDemo.astro';
+import budy from '../assets/orig/budy-teleoperador.webp';
+import alumna from '../assets/orig/alumna-curso-mindfulness-onlive.webp';
+import { externos } from '../data/sitio';
+import { url } from '../lib/url';
+import '../styles/formularios.css';
+---
+<Base
+  titulo="Pregunta aquí · Habitar el Tiempo"
+  descripcion="¿En qué podemos ayudarte? Escribe tu consulta a la Escuela de Mindfulness Habitar el Tiempo y te responderemos personalmente."
+>
+  <section class="seccion consulta">
+    <div class="container consulta-rejilla">
+      <div class="consulta-intro" data-revelar>
+        <Image src={budy} alt="Budy con cascos de teleoperador, listo para atenderte" width={220} densities={[1, 2]} loading="eager" class="consulta-budy" />
+        <h1 class="titulo-pagina">¡Hola!</h1>
+        <p class="lead">¿En qué podemos ayudarte?</p>
+      </div>
+
+      <div class="consulta-caja" data-revelar="0.1">
+        <!-- PENDIENTE: conectar con Formspree o con el backend real de la escuela
+             (action="https://formspree.io/f/XXXX" method="POST" y quitar data-demo). -->
+        <form class="formulario" novalidate data-demo>
+          <Campo id="con-nombre" nombre="nombre" etiqueta="Tu nombre" requerido autocomplete="name" vacio="Escribe tu nombre." />
+          <Campo id="con-email" nombre="email" etiqueta="Email" tipo="email" requerido autocomplete="email" vacio="Escribe tu correo electrónico." />
+          <Campo id="con-consulta" nombre="consulta" etiqueta="Tu consulta o comentario" tipo="textarea" requerido filas={5} vacio="Cuéntanos tu consulta o comentario." />
+          <fieldset class="grupo">
+            <legend>Inscripción Newsletter</legend>
+            <Campo id="con-news" nombre="newsletter" tipo="checkbox">Sí, quiero estar al día</Campo>
+          </fieldset>
+          <fieldset class="grupo">
+            <legend>Política de privacidad</legend>
+            <Campo id="con-acepto" nombre="privacidad" tipo="checkbox" requerido vacio="Necesitamos que aceptes la política de privacidad.">
+              He leído y acepto la <a href={externos.privacidad} rel="noopener" target="_blank">política de privacidad</a>
+            </Campo>
+          </fieldset>
+          <button type="submit" class="btn btn--primario btn--grande">Enviar ›</button>
+          <AvisoDemo />
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion seccion--niebla" id="solicita" aria-labelledby="aprende-titulo">
+    <div class="container aprende" data-revelar>
+      <Image src={alumna} alt="Ilustración: una alumna medita en casa mientras sigue una sesión por videoconferencia" widths={[400, 600, 900]} sizes="(min-width: 900px) 480px, 92vw" class="aprende-img" />
+      <div>
+        <p class="antetitulo">Aprende o profundiza en Mindfulness</p>
+        <h2 id="aprende-titulo" class="h2">Sesiones individuales</h2>
+        <a href={url('consultame/#solicita')} class="btn btn--primario btn--grande" data-abrir-sesiones>Empieza ahora</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .consulta-rejilla { display: grid; gap: var(--s-7); align-items: start; }
+  .consulta-intro { display: grid; justify-items: center; text-align: center; gap: var(--s-2); }
+  :global(.consulta-budy) { width: 180px; height: 180px; border-radius: 50%; margin-bottom: var(--s-3); }
+  .titulo-pagina { font-size: var(--fs-2xl); font-weight: 800; letter-spacing: -0.025em; }
+  .consulta-caja {
+    padding: var(--s-6) var(--s-5);
+    border-radius: var(--r-lg);
+    background: var(--blanco);
+    border: 1px solid var(--linea);
+    box-shadow: var(--sombra-2);
+  }
+  .consulta-caja .btn { justify-self: start; }
+  .grupo { border: 0; padding: 0; margin: 0; display: grid; gap: var(--s-2); }
+  .grupo legend { font-weight: 700; font-size: var(--fs-sm); margin-bottom: var(--s-2); padding: 0; }
+  @media (min-width: 900px) {
+    .consulta-rejilla { grid-template-columns: 0.8fr 1.2fr; gap: var(--s-8); }
+    .consulta-intro { justify-items: start; text-align: left; position: sticky; top: calc(var(--cabecera) + var(--s-6)); }
+    .consulta-caja { padding: var(--s-7); }
+  }
+
+  .aprende { display: grid; gap: var(--s-6); align-items: center; }
+  :global(.aprende-img) { width: 100%; max-width: 480px; border-radius: var(--r-lg); box-shadow: var(--sombra-1); }
+  .aprende .h2 { margin-bottom: var(--s-5); }
+  @media (min-width: 900px) { .aprende { grid-template-columns: auto 1fr; gap: var(--s-8); } }
+</style>

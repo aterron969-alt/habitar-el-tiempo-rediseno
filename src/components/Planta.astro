@@ -1,0 +1,50 @@
+---
+// Ilustraciones sencillas de raíz, tallo y fruto para las tarjetas de mecenazgo.
+// Trazo fino como los iconos; crecen un poco al pasar el ratón por la tarjeta.
+import type { Planta } from '../data/mecenazgo';
+interface Props { tipo: Planta }
+const { tipo } = Astro.props;
+---
+<svg class="planta" viewBox="0 0 120 120" aria-hidden="true" focusable="false">
+  <path class="suelo" d="M14 78h92" />
+  {tipo === 'raiz' && (
+    <g>
+      <path class="tallo" d="M60 78V62" />
+      <path class="hoja" d="M60 66c-2-7-8-10-14-9 1 6 6 10 14 9Z" />
+      <path class="hoja" d="M60 63c2-7 8-10 14-9-1 6-6 10-14 9Z" />
+      <path class="raiz" d="M60 78v14c0 5-4 8-9 11M60 88c3 4 9 5 12 10M60 84c-5 1-11 0-15 3M54 98c-3 1-6 0-8 2M68 92c4-1 7 0 9 3" />
+    </g>
+  )}
+  {tipo === 'tallo' && (
+    <g>
+      <path class="raiz" d="M60 78v8c0 3-3 5-6 7M60 82c2 3 6 4 8 7" />
+      <path class="tallo" d="M60 78V28" />
+      <path class="hoja" d="M60 64c-3-9-11-13-19-12 1 8 9 13 19 12Z" />
+      <path class="hoja" d="M60 50c3-9 11-13 19-12-1 8-9 13-19 12Z" />
+      <path class="hoja" d="M60 36c-2-7-8-10-14-9 1 6 6 10 14 9Z" />
+    </g>
+  )}
+  {tipo === 'fruto' && (
+    <g>
+      <path class="raiz" d="M60 78v8c0 3-3 5-6 7M60 82c2 3 6 4 8 7" />
+      <path class="tallo" d="M60 78V50M60 60l-10-9M60 56l9-8" />
+      <path class="copa" d="M60 52c-17 0-28-8-28-20 0-10 8-17 17-17 3-6 8-8 11-8s8 2 11 8c9 0 17 7 17 17 0 12-11 20-28 20Z" />
+      <circle class="fruto" cx="47" cy="32" r="4" />
+      <circle class="fruto" cx="66" cy="24" r="4" />
+      <circle class="fruto" cx="74" cy="38" r="4" />
+      <circle class="fruto" cx="56" cy="42" r="4" />
+    </g>
+  )}
+</svg>
+
+<style>
+  .planta { width: 132px; height: 132px; overflow: visible; }
+  .planta path, .planta circle { fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .suelo { stroke: #c9c9d1; }
+  .raiz { stroke: #a0866b; }
+  .tallo { stroke: #4f8a5b; }
+  .hoja { stroke: #4f8a5b; fill: #e4f2e2 !important; }
+  .copa { stroke: #4f8a5b; fill: #e4f2e2 !important; }
+  .fruto { stroke: var(--rosa); fill: #fbe1ec !important; }
+  .planta g { transform-origin: 60px 78px; transition: transform var(--t-lenta) var(--ease-suave); }
+</style>

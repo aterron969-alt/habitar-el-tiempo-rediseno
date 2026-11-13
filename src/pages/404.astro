@@ -1,0 +1,25 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import budy from '../assets/orig/budy-sobre-el-mundo.webp';
+import { url } from '../lib/url';
+---
+<Base titulo="Página no encontrada · Habitar el Tiempo" descripcion="Esta página no existe. Vuelve al inicio de la Escuela de Mindfulness Habitar el Tiempo.">
+  <section class="seccion seccion--cielo no-encontrada">
+    <div class="container caja">
+      <Image src={budy} alt="Budy medita tranquilo sobre el mundo" widths={[320, 560]} sizes="(min-width: 640px) 420px, 80vw" loading="eager" class="budy-mundo" />
+      <h1 class="titulo">Esta página no existe</h1>
+      <p class="lead">Respira. Puede que el enlace haya cambiado o que la dirección tenga una errata.</p>
+      <a class="btn btn--primario btn--grande" href={url()}>Volver al inicio</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .no-encontrada { min-height: calc(100vh - var(--cabecera) - 200px); display: grid; align-items: center; }
+  .caja { display: grid; justify-items: center; text-align: center; gap: var(--s-4); }
+  :global(.budy-mundo) { width: min(420px, 80vw); height: auto; }
+  .titulo { font-size: var(--fs-2xl); font-weight: 800; }
+  .lead { max-width: 40ch; }
+  .btn { margin-top: var(--s-3); }
+</style>
